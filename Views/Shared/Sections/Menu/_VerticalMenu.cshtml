@@ -1,0 +1,36 @@
+@{
+  TempData.Keep();
+  string? currentPage = ViewContext.HttpContext.Request.Path;
+}
+
+<!-- Menu -->
+@* ! Do this simple *@
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+  @* ! Hide app brand if navbar-full *@
+  <div class='app-brand demo justify-content-center @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
+    <a asp-controller="Requester" asp-action="Index" class="app-brand-link">
+      <span class="app-brand-logo demo">
+                <img class="justify-content-center"  src="~/img/logonun dikey renkli kullanımı.png" height="50" width="50" />
+    </a>
+    <hr>
+        <a asp-controller="Requester" asp-action="Index" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+      <i class="bx bx-chevron-left bx-sm d-flex align-items-center "></i>
+    </a>
+  </div>
+
+  <div class="menu-inner-shadow"></div>
+
+
+
+            <!-- Components -->
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Menü</span></li>
+        <!-- Cards -->
+        <li class='menu-item@(currentPage == "/Requester/Index" ? " active" : "")'>
+            <a asp-controller="Requester" asp-action="Index" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-smile"></i>
+                <div class="text-truncate" data-i18n="Dashboards">Talep Listesi</div>
+            </a>
+        </li>
+</aside>
+<!-- / Menu -->

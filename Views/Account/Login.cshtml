@@ -1,0 +1,66 @@
+@model AspnetCoreMvcFull.Models.LoginViewModel
+
+@{
+    Layout = null;
+}
+@{
+    Layout = "_BlankLayout";
+    ViewData["Title"] = "Login Basic - Pages";
+}
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.css">
+}
+
+
+@* ************** Content ************** *@
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register -->
+            <div class="card px-sm-6 px-0">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="/" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo"><img src="~/img/icons/logonun dikey renkli kullanımı.png" height="100" width="100"/></span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="/" class="app-brand-link gap-2">
+                            <h4 class="justify-content-center">AK PARTİ'M </h4>
+                        </a>
+                    </div>
+                    
+                  
+                    <form id="formAuthentication" action="/Account/Login" class="mb-6" action="~/" method="POST">
+                        <div class="mb-6">
+                            <input asp-for="TcKimlikNo" class="form-control " placeholder="T.C Kimlik Numarası" autocomplete="off" />
+                            <span asp-validation-for="TcKimlikNo" class="text-danger"></span>
+                        </div>
+                        <div class="mb-6 form-password-toggle">
+                            <input type="password" id="password" class="form-control " asp-for="Password" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" autocomplete="off" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="mb-8">
+                            <div class="d-flex justify-content-between mt-8">
+                                <div class="form-check mb-0 ms-2">
+                                    <input class="form-check-input" type="checkbox" id="remember-me">
+                                    <label class="form-check-label" for="remember-me">
+                                        Beni Hatırla
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /Register -->
+        </div>
+    </div>
+</div>

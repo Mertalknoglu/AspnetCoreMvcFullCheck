@@ -91,6 +91,24 @@ namespace AspnetCoreMvcFull.Controllers
       return View(model);
     }
     #endregion
+    public async Task<IActionResult> Index()
+    {
+      // Kullanıcı oturum açmamışsa Login sayfasına yönlendir
+      if (!User.Identity.IsAuthenticated)
+      {
+        return RedirectToAction("Login", "Account");
+      }
+
+      var user = await _userManager.GetUserAsync(User);
+      if (user == null)
+      {
+        return RedirectToAction("Login", "Account");
+      }
+
+      ViewBag.FirstName = user.FirstName;
+      ViewBag.LastName = user.LastName;
+      return View();
+    }
     #region Logout
     [HttpGet]
     public async Task<IActionResult> Logout()

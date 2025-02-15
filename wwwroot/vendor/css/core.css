@@ -77,7 +77,7 @@
   --bs-body-line-height: 1.375;
   --bs-body-color: #646e78;
   --bs-body-color-rgb: 100, 110, 120;
-  --bs-body-bg: #f5f5f9;
+  --bs-body-bg: #010f1a;
   --bs-body-bg-rgb: 245, 245, 249;
   --bs-emphasis-color: #22303e;
   --bs-emphasis-color-rgb: 34, 48, 62;
@@ -145,14 +145,14 @@ body {
   line-height: var(--bs-body-line-height);
   color: var(--bs-body-color);
   text-align: var(--bs-body-text-align);
-  background-color: var(--bs-body-bg);
+  background-color: #00314a;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(34, 48, 62, 0);
 }
 
 hr {
   margin: 1rem 0;
-  color: #e4e6e8;
+  color: #010f1a;
   border: 0;
   border-top: var(--bs-border-width) solid;
   opacity: 1;
@@ -2550,8 +2550,8 @@ progress {
   opacity: 1;
 }
 .form-control:disabled {
-  color: #a7acb2;
-  background-color: rgba(34, 48, 62, 0.06);
+  color: #02121f;
+  background-color: #02121f;
   border-color: #cacdd1;
   opacity: 1;
 }
@@ -2585,7 +2585,7 @@ progress {
   margin-bottom: 0;
   line-height: 1.375;
   color: #384551;
-  background-color: transparent;
+  background-color: #02121f;
   border: solid transparent;
   border-width: var(--bs-border-width) 0;
 }
@@ -9589,7 +9589,7 @@ form .invalid,
 form .is-invalid .invalid:before,
 form .is-invalid::before, form .input-validation-error, form .input-validation-error ~ .select2-container--default .select2-selection {
   border-width: 2px;
-  border-color: #ff3e1d !important;
+  border-color: #00314a !important;
 }
 form .form-label.invalid, form .form-label.is-invalid {
   border-width: 2px;
@@ -12667,7 +12667,7 @@ button.list-group-item-gray.active {
 
 .text-danger {
   --bs-text-opacity: 1;
-  color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
+  color: #00314a, var(--bs-text-opacity)) !important;
 }
 
 .text-light {

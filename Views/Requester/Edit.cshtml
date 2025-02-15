@@ -4,12 +4,13 @@
     ViewData["Title"] = "Edit Requester";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<<div class="col-md-12 justify-content-center">
+<div class="col-md-12 justify-content-center">
     <div class="card">
-        <h4 class="card-header">Oluşturlan Talep Güncelle</h4>
-        <h5 class="card-header justify-content-center">Talep oluştur ekranından seçtiğiniz talebi güncelleyebilirsiniz.</h5>
+        <h4 class="card-header">Talep Güncelleme </h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <h5 class="card-header">Talep oluştur ekranından seçtiğiniz talebi güncelleyebilirsiniz.</h5>
+            <div> <h5 class="card-header justify-content-right">    <a class="btn btn-dark" href="@Url.Action("Create")">Talep Oluştur</a></h5></div>
+        </div>
         <div class="card-body">
             <form asp-action="Edit">
                 <div class="mb-4">
@@ -61,8 +62,11 @@
                     <input class="form-control" type="file" id="formFileMultiple" multiple>
                 </div>
                 <div class="mb-12 justify-content-center">
-                    <a href="@Url.Action("Index")">Listeye Geri Dönt</a> &nbsp;
-                    <input type="submit" value="Güncelle" class="btn btn-primary " />
+                    <div style="display: flex; justify-content: right; align-items: center; width: 100%;">
+
+                        <a style="margin-right:10px;" href="@Url.Action("Index")">Listeye Geri Dön</a> &nbsp;
+                        <input type="submit"  value="Güncelle" class="btn btn-dark " />
+                    </div>
                 </div>
             </form>
         </div>

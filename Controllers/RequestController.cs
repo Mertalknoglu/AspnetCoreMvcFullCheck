@@ -37,35 +37,51 @@ public class RequesterController : Controller
   // POST: Requester/Create
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task<IActionResult> Create([Bind("Tckn,FirstName,Surname,TelNo,Email,Address,Description,Date,RequestStatusId,RequestTypeId")] Requester requester)
+  public async Task<IActionResult> Create([Bind("Tckn,FirstName,Surname,TelNo,Email,Address,Description,Date,RequestStatusId,RequestTypeId")] Requester requester, IFormFile[] files)
   {
+    requester.Date = DateTime.Now;
+    // Dosya yükleme kısmı
+    if (files != null && files.Length > 0)
+    {
+      var filePaths = new List<FilePath>();
+
+      foreach (var file in files)
+      {
+        if (file.Length > 0)
+        {
+          // Dosyayı kaydetme
+          var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
+
+          using (var stream = new FileStream(filePath, FileMode.Create))
+          {
+            await file.CopyToAsync(stream);
+          }
+
+          // Dosya yolunu listeye ekliyoruz
+          filePaths.Add(new FilePath { Filepath = "/uploads/" + file.FileName });
+        }
+      }
+
+      // Dosyaları RequestFilePath tablosuna ekleme
+      foreach (var filePath in filePaths)
+      {
+        var requestFilePath = new RequestFilePath
+        {
+          FilePath = filePath,
+          Requester = requester
+        };
+        _context.Add(requestFilePath);
+      }
+    }
+
+    // Requester verisini ekliyoruz
     _context.Add(requester);
     await _context.SaveChangesAsync();
+
     return RedirectToAction(nameof(Index));
-    //ViewData["RequestStatusId"] = new SelectList(_context.RequestStatuses, "Id", "Status", requester.RequestStatusId);
-    //ViewData["RequestTypeId"] = new SelectList(_context.RequestTypes, "Id", "Type", requester.RequestTypeId);
-    //return View(requester);
   }
 
-  public async Task<IActionResult> Edit(int? id)
-  {
-    if (id == null)
-    {
-      return NotFound();
-    }
 
-    var requester = await _context.Requesters.FindAsync(id);
-    if (requester == null)
-    {
-      return NotFound();
-    }
-
-    // RequestStatuses ve RequestTypes verilerini ViewBag ile geçiyoruz
-    ViewBag.RequestStatusList = new SelectList(_context.RequestStatuses, "Id", "Status");
-    ViewBag.RequestTypeList = new SelectList(_context.RequestTypes, "Id", "Type");
-
-    return View(requester);
-  }
 
 
   // POST: Requester/Edit/5

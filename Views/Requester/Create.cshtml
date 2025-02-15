@@ -4,12 +4,12 @@
     ViewData["Title"] = "Create Requester";
 }
 
-<div class="col-md-12 justify-content-center">
+<div class="col-md-12 justify-content-center" >
     <div class="card" >
         <h4 class="card-header">Talep Oluştur</h4>
         <h5 class="card-header justify-content-center">Talep bildiren kişinin bilgilerini girdikten sonra taleple ilgili detayları ve görselleri ekleyerek talep oluşturabilirsiniz.</h5>
         <div class="card-body">
-            <form asp-action="Create">
+            <form asp-action="Create"  enctype="multipart/form-data">
                 <div class="mb-4">
                     <label asp-for="Tckn" class="control-label">T.C Kimlik No</label>
                     <input asp-for="Tckn" class="form-control" />
@@ -55,9 +55,9 @@
                     <select asp-for="RequestTypeId" class="form-control" asp-items="ViewBag.RequestTypeList"></select>
                 </div>
                 <div class="mb-4">
-                    <label for="formFileMultiple" class="form-label">Belge Yükle</label>
-                    <input class="form-control" type="file" id="formFileMultiple" multiple>
-                </div>
+        <label for="formFileMultiple" class="form-label">Belge Yükle</label>
+        <input class="form-control" type="file" id="formFileMultiple" name="files" multiple />
+    </div>
                 <div class="mb-12" style="justify-content:right;">
                     <a style="margin-right:10px;" href="@Url.Action("Index")">Listeye Geri Dön</a> &nbsp;
                     <input type="submit" value="Talep Oluştur" class="btn btn-dark " />

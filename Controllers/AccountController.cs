@@ -42,6 +42,9 @@ namespace AspnetCoreMvcFull.Controllers
       var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
       if (result.Succeeded)
       {
+        TempData["UserName"] = user.FirstName;
+        TempData["SurName"] = user.LastName;
+
         return RedirectToAction("Index", "Home");
       }
 

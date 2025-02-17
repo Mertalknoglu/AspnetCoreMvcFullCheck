@@ -31,27 +31,34 @@
                             <h4 class="justify-content-center">AK PARTİ'M </h4>
                         </a>
                     </div>
-
+                    <div>
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
                     <form id="formAuthentication" class="mb-6" action="/Account/Register" method="POST">
                         <div class="mb-6">
                             <input asp-for="TcKimlikNo" class="form-control " placeholder="T.C. Kimlik Numarası" />
-                            <span asp-validation-for="TcKimlikNo" class="text-danger"></span>
                         </div>
                         <div class="mb-6">
                             <input asp-for="FirstName" class="form-control " placeholder="İsim" />
-                            <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
                         <div class="mb-6">
                             <input asp-for="LastName" class="form-control " placeholder="Soyisim" />
-                            <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
                         <div class="mb-6">
                             <input asp-for="Email" type="email" class="form-control " placeholder="E-mail" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="mb-6">
                             <input asp-for="PhoneNumber" class="form-control " placeholder="Telefon Numarası (555)-(555)(55)(55)" />
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
 
                         <div class="mb-6 form-password-toggle">
@@ -59,7 +66,6 @@
                             <div class="input-group input-group-merge">
                                 <input type="password" asp-for="Password" class="form-control " placeholder="Parola" aria-describedby="password" />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="mb-6 form-password-toggle">
@@ -67,7 +73,6 @@
                             <div class="input-group input-group-merge">
                                 <input type="password" asp-for="ConfirmPassword" class="form-control " aria-describedby="password" placeholder="Parola Tekrar" />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                         </div>
 

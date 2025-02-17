@@ -4,22 +4,29 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabanı bağlantısını yapılandır
+// VeritabanÄ± baÄŸlantÄ±sÄ±nÄ± yapÄ±landÄ±r
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity yapılandırması
+// Identity yapÄ±landÄ±rmasÄ±
+builder.Services.ConfigureApplicationCookie(options =>
+{
+  // Ã‡erez sÃ¼resi ayarlarÄ±
+  options.Cookie.HttpOnly = true;
+  options.ExpireTimeSpan = TimeSpan.FromDays(30);  // Ã‡erez sÃ¼resi (30 gÃ¼n)
+  options.SlidingExpiration = true;  // EÄŸer kullanÄ±cÄ± tekrar giriÅŸ yaparsa sÃ¼renin sÄ±fÄ±rlanmasÄ±nÄ± saÄŸlar
+});
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-// Yetkilendirme ve kimlik doğrulama ayarları
+// Yetkilendirme ve kimlik doÄŸrulama ayarlarÄ±
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Auth/Login"; // Kullanıcı giriş yapmadığında yönlendirilecek sayfa
-    options.AccessDeniedPath = "/Auth/AccessDenied"; // Yetkisiz erişim yönlendirme
+  options.LoginPath = "/Auth/Login"; // KullanÄ±cÄ± giriÅŸ yapmadÄ±ÄŸÄ±nda yÃ¶nlendirilecek sayfa
+  options.AccessDeniedPath = "/Auth/AccessDenied"; // Yetkisiz eriÅŸim yÃ¶nlendirme
 });
 
 // Add services to the container.
@@ -30,9 +37,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+  app.UseExceptionHandler("/Home/Error");
+  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+  app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -44,9 +51,9 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Account}/{action=Login}/{id?}");
+  endpoints.MapControllerRoute(
+      name: "default",
+      pattern: "{controller=Account}/{action=Login}/{id?}");
 });
 
 

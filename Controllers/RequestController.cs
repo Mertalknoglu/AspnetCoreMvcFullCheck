@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
-using System.Web; // Bu kütüphaneyi eklemeyi unutma
+using System.Web;
+using AspnetCoreMvcFull.Models.Models;
 [Authorize]
 public class RequesterController : Controller
 {
@@ -16,7 +17,7 @@ public class RequesterController : Controller
   // GET: Requester
   public async Task<IActionResult> Index()
   {
-    var requesters = await _context.Requesters
+    var requesters = await _context.Requests
         .Include(r => r.RequestStatus)
         .Include(r => r.RequestType)
         .ToListAsync();
@@ -37,7 +38,7 @@ public class RequesterController : Controller
   // POST: Requester/Create
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task<IActionResult> Create([Bind("Tckn,FirstName,Surname,TelNo,Email,Address,Description,Date,RequestStatusId,RequestTypeId")] Requester requester, IFormFile[] files)
+  public async Task<IActionResult> Create([Bind("Tckn,FirstName,Surname,TelNo,Email,Address,Description,Date,RequestStatusId,RequestTypeId")] Request requester, IFormFile[] files)
   {
     var errors = ValidateRequester(requester);
 
@@ -94,7 +95,7 @@ public class RequesterController : Controller
   // GET: Requester/Edit/{id}
   public async Task<IActionResult> Edit(int id)
   {
-    var requester = await _context.Requesters.FindAsync(id);
+    var requester = await _context.Requests.FindAsync(id);
     if (requester == null)
     {
       return NotFound();
@@ -108,7 +109,7 @@ public class RequesterController : Controller
 
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task<IActionResult> Edit(int id, [Bind("Id,Tckn,FirstName,Surname,TelNo,Email,Address,Description,Date,RequestStatusId,RequestTypeId")] Requester requester, IFormFile[] files)
+  public async Task<IActionResult> Edit(int id, [Bind("Id,Tckn,FirstName,Surname,TelNo,Email,Address,Description,Date,RequestStatusId,RequestTypeId")] Request requester, IFormFile[] files)
   {
     if (id != requester.Id)
     {
@@ -126,7 +127,7 @@ public class RequesterController : Controller
     }
     try
     {
-      var existingRequester = await _context.Requesters.FindAsync(id);
+      var existingRequester = await _context.Requests.FindAsync(id);
       if (existingRequester == null)
       {
         return NotFound();
@@ -180,7 +181,7 @@ public class RequesterController : Controller
     }
     catch (DbUpdateConcurrencyException)
     {
-      if (!_context.Requesters.Any(e => e.Id == requester.Id))
+      if (!_context.Requests.Any(e => e.Id == requester.Id))
       {
         return NotFound();
       }
@@ -195,7 +196,7 @@ public class RequesterController : Controller
   // GET: Requester/Delete/{id}
   public async Task<IActionResult> Delete(int id)
   {
-    var requester = await _context.Requesters.FindAsync(id);
+    var requester = await _context.Requests.FindAsync(id);
     if (requester == null)
     {
       return NotFound();
@@ -207,7 +208,7 @@ public class RequesterController : Controller
   [HttpPost]
   public async Task<IActionResult> DeleteConfirmed(int id)
   {
-    var requester = await _context.Requesters.FindAsync(id);
+    var requester = await _context.Requests.FindAsync(id);
     if (requester == null)
     {
       return Json(new { success = false, message = "Kayıt bulunamadı!" });
@@ -227,7 +228,7 @@ public class RequesterController : Controller
       //  _context.RequestFilePaths.Remove(file);
       //}
 
-      _context.Requesters.Remove(requester);
+      _context.Requests.Remove(requester);
       await _context.SaveChangesAsync();
 
       return Json(new { success = true });
@@ -240,7 +241,7 @@ public class RequesterController : Controller
 
   public JsonResult GetDetails(int id)
   {
-    var requester = _context.Requesters.Include(r => r.RequestType).Include(r => r.RequestStatus)
+    var requester = _context. Requests.Include(r => r.RequestType).Include(r => r.RequestStatus)
                                        .FirstOrDefault(r => r.Id == id);
 
     if (requester == null)
@@ -262,7 +263,7 @@ public class RequesterController : Controller
   }
 
 
-  private List<string> ValidateRequester(Requester model)
+  private List<string> ValidateRequester(Request model)
   {
     var errors = new List<string>();
 

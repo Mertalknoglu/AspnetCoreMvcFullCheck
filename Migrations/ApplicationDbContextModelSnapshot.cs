@@ -45,6 +45,9 @@ namespace AspnetCoreMvcFull.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -84,6 +87,10 @@ namespace AspnetCoreMvcFull.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<int>("UnitId")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -99,6 +106,71 @@ namespace AspnetCoreMvcFull.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("AspnetCoreMvcFull.Models.Models.Request", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestUnitId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tckn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestStatusId");
+
+                    b.HasIndex("RequestTypeId");
+
+                    b.HasIndex("RequestUnitId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("FilePath", b =>
@@ -308,7 +380,7 @@ namespace AspnetCoreMvcFull.Migrations
                     b.ToTable("RequestTypes");
                 });
 
-            modelBuilder.Entity("Requester", b =>
+            modelBuilder.Entity("RequestUnit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -316,50 +388,48 @@ namespace AspnetCoreMvcFull.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RequestStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tckn")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TelNo")
+                    b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RequestStatusId");
+                    b.ToTable("RequestUnits");
+                });
 
-                    b.HasIndex("RequestTypeId");
+            modelBuilder.Entity("AspnetCoreMvcFull.Models.Models.Request", b =>
+                {
+                    b.HasOne("RequestStatus", "RequestStatus")
+                        .WithMany("Requesters")
+                        .HasForeignKey("RequestStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.ToTable("Requesters");
+                    b.HasOne("RequestType", "RequestType")
+                        .WithMany("Requesters")
+                        .HasForeignKey("RequestTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RequestUnit", "RequestUnit")
+                        .WithMany("Requesters")
+                        .HasForeignKey("RequestUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AspnetCoreMvcFull.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RequestStatus");
+
+                    b.Navigation("RequestType");
+
+                    b.Navigation("RequestUnit");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -421,7 +491,7 @@ namespace AspnetCoreMvcFull.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Requester", "Requester")
+                    b.HasOne("AspnetCoreMvcFull.Models.Models.Request", "Requester")
                         .WithMany("RequestFilePaths")
                         .HasForeignKey("RequestDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -432,23 +502,9 @@ namespace AspnetCoreMvcFull.Migrations
                     b.Navigation("Requester");
                 });
 
-            modelBuilder.Entity("Requester", b =>
+            modelBuilder.Entity("AspnetCoreMvcFull.Models.Models.Request", b =>
                 {
-                    b.HasOne("RequestStatus", "RequestStatus")
-                        .WithMany("Requesters")
-                        .HasForeignKey("RequestStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RequestType", "RequestType")
-                        .WithMany("Requesters")
-                        .HasForeignKey("RequestTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RequestStatus");
-
-                    b.Navigation("RequestType");
+                    b.Navigation("RequestFilePaths");
                 });
 
             modelBuilder.Entity("FilePath", b =>
@@ -466,9 +522,9 @@ namespace AspnetCoreMvcFull.Migrations
                     b.Navigation("Requesters");
                 });
 
-            modelBuilder.Entity("Requester", b =>
+            modelBuilder.Entity("RequestUnit", b =>
                 {
-                    b.Navigation("RequestFilePaths");
+                    b.Navigation("Requesters");
                 });
 #pragma warning restore 612, 618
         }

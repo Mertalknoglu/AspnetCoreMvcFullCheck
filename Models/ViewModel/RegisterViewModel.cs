@@ -29,7 +29,8 @@ namespace AspnetCoreMvcFull.Models
     [Required(ErrorMessage = "Şifre zorunlu alandır.")]
     [DataType(DataType.Password)]
     [StringLength(11, MinimumLength = 6, ErrorMessage = "Şifre 11 haneli olmalıdır.")]
-    [RegularExpression("^[0-9]*$", ErrorMessage = "Şifre bir büyük karakter bir rakam ve bir sembol içermelidir.")]
+    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$", ErrorMessage = "Şifre en az bir büyük harf, bir rakam ve bir özel karakter içermelidir.")]
+
     public string Password { get; set; }
 
     [Required(ErrorMessage = "Şifre tekrar alanı zorunlu alandır.")]

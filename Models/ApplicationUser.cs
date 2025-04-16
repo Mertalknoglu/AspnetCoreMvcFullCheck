@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AspnetCoreMvcFull.Models
 {
-  public class ApplicationUser : IdentityUser
+  public class ApplicationUser : IdentityUser<int>
   {
     [Required]
     [StringLength(11, MinimumLength = 11, ErrorMessage = "TC Kimlik Numarası 11 haneli olmalıdır.")]

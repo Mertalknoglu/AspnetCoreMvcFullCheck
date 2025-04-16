@@ -6,10 +6,14 @@
 
 <div class="col-md-12 justify-content-center">
     <div class="card">
-        <h4 class="card-header">Talep Güncelleme </h4>
+        <h4 class="card-header">Talep Güncelleme</h4>
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <h5 class="card-header">Talep oluştur ekranından seçtiğiniz talebi güncelleyebilirsiniz.</h5>
-            <div> <h5 class="card-header justify-content-right">    <a class="btn btn-dark" href="@Url.Action("Create")">Talep Oluştur</a></h5></div>
+            <div>
+                <h5 class="card-header justify-content-right">
+                    <a class="btn btn-dark" href="@Url.Action("Create")">Talep Oluştur</a>
+                </h5>
+            </div>
         </div>
         <div class="card-body">
             <div>
@@ -25,27 +29,35 @@
                     </div>
                 }
             </div>
-            <form asp-action="Edit">
+
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+
                 <div class="mb-4">
-                    <label asp-for="Tckn" class="control-label" maxlength="11">T.C Kimlik No</label>
-                    <input asp-for="Tckn" class="form-control" />
+                    <label asp-for="Tckn" class="control-label">T.C Kimlik No</label>
+                    <input asp-for="Tckn" class="form-control" maxlength="11" />
                 </div>
+
                 <div class="mb-4">
                     <label asp-for="FirstName" class="control-label">İsim</label>
                     <input asp-for="FirstName" class="form-control" />
                 </div>
+
                 <div class="mb-4">
                     <label asp-for="Surname" class="control-label">Soyisim</label>
                     <input asp-for="Surname" class="form-control" />
                 </div>
+
                 <div class="mb-4">
                     <label asp-for="Email" class="control-label">E-Mail</label>
                     <input asp-for="Email" class="form-control" />
                 </div>
+
                 <div class="mb-4">
-                    <label asp-for="TelNo" class="control-label" maxlength="11"> Telefon Numarası</label>
-                    <input asp-for="TelNo" class="form-control" />
+                    <label asp-for="TelNo" class="control-label">Telefon Numarası</label>
+                    <input asp-for="TelNo" class="form-control" maxlength="11" />
                 </div>
+
                 <div class="mb-4">
                     <label asp-for="Address" class="control-label">Adres</label>
                     <input asp-for="Address" class="form-control" />
@@ -55,23 +67,33 @@
                     <label asp-for="Description" class="form-label">Açıklama</label>
                     <textarea class="form-control" asp-for="Description" rows="3"></textarea>
                 </div>
+
+                <div class="mb-4">
+                    <label asp-for="RequestUnitId" class="control-label">Talep Edilen Birim</label>
+                    <select asp-for="RequestUnitId" class="form-control" asp-items="ViewBag.RequestUnitList">
+                        <option value="">Birim Seçiniz</option>
+                    </select>
+                </div>
+
                 <div class="mb-4">
                     <label asp-for="RequestStatusId" class="control-label">Talep Durumu</label>
                     <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList"></select>
                 </div>
+
                 <div class="mb-4">
                     <label asp-for="RequestTypeId" class="control-label">Talep Tipi</label>
                     <select asp-for="RequestTypeId" class="form-control" asp-items="ViewBag.RequestTypeList"></select>
                 </div>
+
                 <div class="mb-4">
                     <label for="formFileMultiple" class="form-label">Belge Yükle</label>
-                    <input class="form-control" type="file" id="formFileMultiple" multiple>
+                    <input class="form-control" type="file" id="formFileMultiple" name="files" multiple />
                 </div>
+
                 <div class="mb-12 justify-content-center">
                     <div style="display: flex; justify-content: right; align-items: center; width: 100%;">
-
-                        <a style="margin-right:10px;" href="@Url.Action("Index")">Listeye Geri Dön</a> &nbsp;
-                        <input type="submit"  value="Güncelle" class="btn btn-dark " />
+                        <a style="margin-right:10px;" href="@Url.Action("Index")">Listeye Geri Dön</a>
+                        <input type="submit" value="Güncelle" class="btn btn-dark" />
                     </div>
                 </div>
             </form>

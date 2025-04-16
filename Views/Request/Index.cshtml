@@ -1,77 +1,106 @@
-@model IEnumerable<AspnetCoreMvcFull.Models.Models.Request>
+@model List<AspnetCoreMvcFull.Models.Models.Request>
 
 @{
-    ViewData["Title"] = "Requesters List";
-}<style>
-     .modal-body {
-         max-height: 400px; /* Modal içeriği sınırlama */
-         overflow-y: auto; /* Eğer içerik çoksa, scroll bar ekler */
-     }
+    ViewData["Title"] = "Taleplerim";
+}
+<!-- DataTables CSS -->
+<!-- jQuery (ilk) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-         .modal-body p {
-             word-wrap: break-word; /* Metin uzun olduğunda alt satıra geçmesini sağlar */
-             overflow-wrap: break-word;
-         }
+<!-- Bootstrap bundle (modal için gerekliyse) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables (sadece jQuery'den sonra gelmeli!) -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<style>
+    #modalFiles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .position-relative {
+        display: inline-block !important;
+    }
+
 </style>
 <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <h4 class="card-header">Talep Listesi </h4>
-        <div> <h5 class="card-header justify-content-right">    <a class="btn btn-dark" href="@Url.Action("Create")">Talep Oluştur</a></h5></div>
-    </div>    
-   
-    <div class="table-responsive text-nowrap">
-        <table class="table table-hover table-container-x">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>T.C Kimlik Numarası</th>
-                    <th>İsim</th>
-                    <th>Talep Tipi</th>
-                    <th>Durum</th>                  
-                    <th>Tarih</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Tckn</td>
-                        <td>@item.FirstName @item.Surname</td>
-                        <td>@item.RequestType.Type</td>
-                        <td>@item.RequestStatus.Status</td>
-                        <td>@item.Date</td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item" onclick="showDetails(@item.Id)"><i class="bx bx-edit-alt me-1"></i>Detaylar</button>
-                                    <a class="dropdown-item" href="@Url.Action("Edit", new { id = item.Id })"><i class="bx bx-edit-alt me-1"></i> Güncelle</a>
-                                    <button class="dropdown-item" onclick="confirmDelete(@item.Id)"><i class="bx bx-trash me-1"></i>Sil</button>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <div class="card-header pb-0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Talep Listesi</h4>
+            <a class="btn btn-dark" href="@Url.Action("Create")">Talep Oluştur</a>
+        </div>
+        <ul class="nav nav-tabs card-header-tabs" id="requestTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="gelen-tab" data-bs-toggle="tab" data-bs-target="#gelen" type="button" role="tab" aria-controls="gelen" aria-selected="true">
+                    Sana Gelen Talepler
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="giden-tab" data-bs-toggle="tab" data-bs-target="#giden" type="button" role="tab" aria-controls="giden" aria-selected="false">
+                      Gönderdiğin Talepler        
+                </button>
+            </li>
+        </ul>
+
+        <div class="card-body tab-content" id="requestTabsContent">
+            <div class="tab-pane fade show active" id="gelen" role="tabpanel" aria-labelledby="gelen-tab">
+                @Html.Partial("RequestListPartial", ViewBag.GelenTalepler as List<AspnetCoreMvcFull.Models.Models.Request>,
+                         new ViewDataDictionary(ViewData) { { "gelen", "true" } })
+
+              
+            </div>
+            <div class="tab-pane fade" id="giden" role="tabpanel" aria-labelledby="giden-tab">
+                @Html.Partial("RequestListPartial", ViewBag.GonderdigimTalepler as List<AspnetCoreMvcFull.Models.Models.Request>,
+                         new ViewDataDictionary(ViewData) { { "gelen", "false" } })
+
+            </div>
+        </div>
     </div>
+
 </div>
-<!-- Modal (Pop-up) Yapısı -->
-<div class="modal modal-top fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="detailsModalLabel">Talep Detayları</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p><strong>T.C Kimlik No: </strong><span id="modalTckn"></span></p>
-                <p><strong>İsim: </strong><span id="modalName"></span></p>
-                <p><strong>Talep Tipi: </strong><span id="modalRequestType"></span></p>
-                <p><strong>Durum: </strong><span id="modalStatus"></span></p>
-                <p><strong>Tarih: </strong><span id="modalDate"></span></p>
-                <p><strong>Açıklama: </strong><span id="modalDescription"></span></p>
+                <div class="container text-muted">
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-semibold">T.C Kimlik No:</div>
+                        <div class="col-7" id="modalTckn"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-semibold">İsim:</div>
+                        <div class="col-7" id="modalName"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-semibold">Talep Tipi:</div>
+                        <div class="col-7" id="modalRequestType"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-semibold">Durum:</div>
+                        <div class="col-7" id="modalStatus"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-semibold">Tarih:</div>
+                        <div class="col-7" id="modalDate"></div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-5 fw-semibold">Açıklama:</div>
+                        <div class="col-7" id="modalDescription"></div>
+                    </div>
+                    <div class="row py-2 border-top">
+                        <div class="col-5 fw-semibold">Dosyalar:</div>
+                        <div class="col-7 d-flex flex-wrap gap-2" id="modalFiles"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
@@ -80,83 +109,75 @@
     </div>
 </div>
 
-   
 
-@*         <!-- Modal -->
-<div class="modal modal-top fade" id="detailsModal" tabindex="-1">
-            <div class="modal-dialog">
-                    <div class="modal-header">
-            <h5 class="modal-title" id="detailsModalLabel">Talep Detayları</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Güncelleme Modalı -->
+<div class="modal fade" id="updateRequestModal" tabindex="-1" aria-labelledby="updateRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="updateRequestForm" enctype="multipart/form-data" method="post">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" style="color:white" id="updateRequestModalLabel">Talep Güncelle</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="updateRequestId" name="Id" />
+                    <input type="hidden" name="Address" id="Address" value="" />
+                    <input type="hidden" name="Tckn" id="Tckn" value="" />
+                    <input type="hidden" name="FirstName" id="FirstName" value="" />
+                    <input type="hidden" name="Surname" id="Surname" value="" />
+                    <input type="hidden" name="TelNo" id="TelNo" value="" />
+                    <input type="hidden" name="Email" id="Email" value="" />
+                    <input type="hidden" name="Description" id="Description" value="" />
+
+                    <div class="mb-3">
+                        <label for="RequestStatusId" class="form-label">Talep Durumu</label>
+                        <select id="RequestStatusId" name="RequestStatusId" class="form-select">
+                            @foreach (var item in ViewBag.RequestStatusList as List<SelectListItem>)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
                     </div>
-                        <div class="modal-body">
-                            <p><strong>T.C Kimlik No: </strong><span id="modalTckn"></span></p>
-                            <p><strong>İsim: </strong><span id="modalName"></span></p>
-                            <p><strong>Talep Tipi: </strong><span id="modalRequestType"></span></p>
-                            <p><strong>Durum: </strong><span id="modalStatus"></span></p>
-                            <p><strong>Tarih: </strong><span id="modalDate"></span></p>
-                            <p><strong>Açıklama: </strong><span id="modalDescription"></span></p>
+
+                    <div class="mb-3">
+                        <label for="RequestTypeId" class="form-label">Talep Tipi</label>
+                        <select id="RequestTypeId" name="RequestTypeId" class="form-select">
+                            @foreach (var item in ViewBag.RequestTypeList as List<SelectListItem>)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="RequestUnitId" class="form-label">Talep Edilen Birim</label>
+                        <select id="RequestUnitId" name="RequestUnitId" class="form-select">
+                            @foreach (var item in ViewBag.RequestUnitList as List<SelectListItem>)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Yüklü Dosyalar</label>
+                        <div id="existingFiles" class="d-flex flex-wrap gap-2">
+                            <!-- Mevcut dosyalar burada listelenecek -->
                         </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
                     </div>
-            </div>
-        </div> *@
 
-<!-- jQuery ekleyelim (eğer yoksa) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-        function showDetails(id) {
-         $.ajax({
-            url: '/Requester/GetDetails/' + id,  // Controller'a istek gönder
-            type: 'GET',
-            success: function(data) {
-
-                // Veriyi modal'a yerleştir
-                $('#modalTckn').text(data.tckn);
-                $('#modalName').text(data.firstName + ' ' + data.surname);
-                $('#modalRequestType').text(data.requestType);
-                $('#modalStatus').text(data.requestStatus);
-                $('#modalDate').text(data.date);
-                $('#modalDescription').text(data.description);
-
-                // Modal'ı göster
-                $('#detailsModal').modal('show');
-            },
-            error: function(xhr, status, error) {
-                console.log("Veri alınırken hata oluştu: ", error);
-            }
-        });
-    }
-
-</script>
-
-<script>
-    function confirmDelete(id) {
-        if (confirm("Bu kaydı silmek istediğinize emin misiniz?")) {
-            $.ajax({
-                url: `/Requester/DeleteConfirmed/${id}`,  // ID'yi query string olarak değil, body içinde göndereceğiz
-                type: "POST",
-                contentType: "application/json", // JSON formatı belirtiyoruz
-                data: JSON.stringify({ id: id }), // ID'yi JSON olarak gönderiyoruz
-                success: function (data) {
-                    console.log("Sunucu yanıtı:", data); // JSON cevabı konsola yazdır
-                    console.log(data.success); // JSON cevabı konsola yazdır
-
-                    if (data.success) {
-                        alert("Talep Silme Başarılı"); // ✅ Başarı mesajını göster
-                        location.reload();
-                    } else {
-                        alert("Silme başarısız: " + data.message); // ❌ Hata mesajını göster
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Hatası:", error);
-                    alert("Sunucu ile bağlantı kurulurken bir hata oluştu.");
-                }
-            });
-        }
-    }
-</script>
+                    <div class="mb-3">
+                        <label for="newFiles" class="form-label">Yeni Dosya Ekle</label>
+                        <input type="file" name="newFiles" id="newFiles" class="form-control" multiple />
+                    </div>
 
 
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-dark">Güncelle</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -45,7 +45,7 @@ namespace AspnetCoreMvcFull.Controllers
         TempData["UserName"] = user.FirstName;
         TempData["SurName"] = user.LastName;
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Request");
       }
 
       ModelState.AddModelError("", "Giriş başarısız. TC Kimlik Numarası veya şifre hatalı.");

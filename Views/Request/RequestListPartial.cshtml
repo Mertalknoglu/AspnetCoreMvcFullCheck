@@ -1,0 +1,269 @@
+@model List<AspnetCoreMvcFull.Models.Models.Request>
+
+@{
+    string kaynak = ViewData["gelen"]?.ToString() ?? "";
+    string tableId = kaynak == "true" ? "gonderilenTablo" : "gelenTablo";
+    bool isGelen = kaynak == "false";
+}
+
+@if (Model != null && Model.Any())
+{
+    <!-- Masaüstü görünüm -->
+    <div class="d-none d-md-block">
+        <div class="table-responsive">
+            <table id="@tableId" class="table table-bordered align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Ad Soyad</th>
+                        <th>Talep Tipi</th>
+                        <th>Birim</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>Açıklama</th>
+                        <th class="text-center">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.FirstName @item.Surname</td>
+                            <td>@item.RequestType?.Type</td>
+                            <td>@item.RequestUnit?.Unit</td>
+                            <td>@item.RequestStatus?.Status</td>
+                            <td>@item.Date.ToString("dd.MM.yyyy")</td>
+                            <td>@item.Description</td>
+                            <td class="text-center">
+
+                                <button onclick="showDetails(@item.Id)" class="btn btn-sm btn-outline-dark me-1">@item.Id Detaylar</button>
+                                    @if (ViewBag.IsAdmin == true)
+                                    {
+                                    <a class="btn btn-sm btn-outline-primary me-1" href="@Url.Action("Edit", new { id = item.Id })">@item.Id  Güncelle</a>
+                                    }
+                                    <button onclick="openUpdateModal(@item.Id)" class="btn btn-sm btn-outline-primary me-1">
+                                        Düzenle
+                                    </button>
+                                    @if (kaynak == "false")
+                                    {
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">Sil</a>
+                                    }
+
+                           
+                               
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mobil görünüm -->
+    <div class="d-block d-md-none">
+        <div class="row row-cols-1 g-3">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.FirstName @item.Surname</h5>
+                            <p class="mb-1"><strong>Tipi:</strong> @item.RequestType?.Type</p>
+                            <p class="mb-1"><strong>Birim:</strong> @item.RequestUnit?.Unit</p>
+                            <p class="mb-1"><strong>Durum:</strong> @item.RequestStatus?.Status</p>
+                            <p class="mb-1"><strong>Tarih:</strong> @item.Date.ToString("dd.MM.yyyy")</p>
+                            <p class="mb-2"><strong>Açıklama:</strong> @item.Description</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                            <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-outline-primary">Düzenle</a>
+                            <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">Sil</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">Kayıt bulunamadı.</div>
+}
+
+
+<script>
+    function showDetails(id) {
+        $.ajax({
+            url: '/Request/GetDetails/' + id,
+            type: 'GET',
+            success: function (data) {
+                $('#modalTckn').text(data.tckn);
+                $('#modalName').text(data.firstName + ' ' + data.surname);
+                $('#modalRequestType').text(data.requestType);
+                $('#modalStatus').text(data.requestStatus);
+                $('#modalDate').text(data.date);
+                $('#modalDescription').text(data.description);
+
+                let fileHtml = '';
+                if (data.files && data.files.length > 0) {
+                    data.files.forEach(file => {
+                        const fileName = file.split('/').pop();
+                        fileHtml += `
+                            <div class="position-relative" style="width:120px;height:120px;">
+                                <img src="${file}" class="img-thumbnail w-100 h-100" style="border-radius:6px; object-fit:cover;">
+                                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2"
+                                     style="background:rgba(0,0,0,0.6); opacity:0; transition:opacity 0.3s;"
+                                     onmouseover="this.style.opacity=1"
+                                     onmouseout="this.style.opacity=0">
+                                    <a href="${file}" download="${fileName}" class="btn btn-sm btn-light">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <a href="${file}" target="_blank" class="btn btn-sm btn-light">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    fileHtml = "<span>Dosya bulunamadı.</span>";
+                }
+
+                $('#modalFiles').html(fileHtml);
+
+                const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+                modal.show();
+            },
+            error: function () {
+                alert("Detaylar yüklenemedi.");
+            }
+        });
+    }
+
+
+
+    // Güncelle modal açma fonksiyonu
+    function openUpdateModal(id) {
+        $('#updateRequestId').val(id);
+
+        // önce mevcut dosyaları yükle
+        $.ajax({
+            url: `/Request/GetFiles/${id}`,
+            type: 'GET',
+            success: function (filesData) {
+                let html = '';
+                filesData.forEach(file => {
+                    html += `
+                        <div class="position-relative" style="width: 120px;">
+                            <img src="${file}" class="img-thumbnail" style="height:100px; object-fit:cover;" />
+                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                                onclick="deleteFile('${file}', ${id})" style="border-radius:50%;">×</button>
+                        </div>`;
+                });
+                $('#existingFiles').html(html);
+            },
+            error: function () {
+                alert("Dosyalar yüklenemedi.");
+            }
+        });
+
+        // sonra diğer bilgileri doldur
+        $.ajax({
+            url: '/Request/GetDetails/' + id,
+            type: 'GET',
+            success: function (data) {
+                if (data.success === false) {
+                    alert(data.message);
+                    return;
+                }
+
+                $('#Address').val(data.address);
+                $('#Tckn').val(data.tckn);
+                $('#FirstName').val(data.firstName);
+                $('#Surname').val(data.surname);
+                $('#TelNo').val(data.telNo);
+                $('#Email').val(data.email);
+                $('#Description').val(data.description);
+
+                const updateModal = new bootstrap.Modal(document.getElementById('updateRequestModal'));
+                updateModal.show();
+            },
+            error: function () {
+                alert("Detaylar yüklenemedi.");
+            }
+        });
+    }
+    
+
+    // Dosya silme fonksiyonu
+    function deleteFile(path, requestId) {
+        if (!confirm("Dosya silinsin mi?")) return;
+
+        $.ajax({
+            url: '/Request/DeleteFile',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ filePath: path, requestId: requestId }),
+            success: function () {
+                openUpdateModal(requestId);
+            }
+        });
+    }
+
+    // Güncelleme formu
+    $("#updateRequestForm").off('submit').on('submit', function (e) {
+        e.preventDefault();
+
+        const form = document.getElementById("updateRequestForm");
+        const formData = new FormData(form);
+        const id = $('#updateRequestId').val();
+
+        $.ajax({
+            url: `/Request/EditAjax/${id}`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    alert("Talep başarıyla güncellendi!");
+                    location.reload();
+                } else {
+                    alert(response.message || "Güncelleme sırasında hata oluştu.");
+                }
+            },
+            error: function (xhr) {
+                alert("Bir hata oluştu: " + xhr.responseText);
+            }
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        const gelen = $('#gelenTablo');
+        const gonderilen = $('#gonderilenTablo');
+
+        if (gelen.length && !$.fn.DataTable.isDataTable(gelen)) {
+            gelen.DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                }
+            });
+        }
+
+        if (gonderilen.length && !$.fn.DataTable.isDataTable(gonderilen)) {
+            gonderilen.DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                }
+            });
+        }
+    });
+</script>
+

@@ -1,9 +1,10 @@
 using AspnetCoreMvcFull.Models;
 using AspnetCoreMvcFull.Models.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
 {
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -11,9 +12,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
   public DbSet<Request> Requests { get; set; }
   public DbSet<RequestStatus> RequestStatuses { get; set; }
   public DbSet<RequestType> RequestTypes { get; set; }
-  public DbSet<FilePath> FilePaths { get; set; }
   public DbSet<RequestFilePath> RequestFilePaths { get; set; }
   public DbSet<RequestUnit> RequestUnits { get; set; }
+  public DbSet<RequestLog> RequestLogs { get; set; }
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
@@ -39,9 +40,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         .HasForeignKey(rfp => rfp.RequestDetailsId);
 
     modelBuilder.Entity<RequestFilePath>()
-        .HasOne(rfp => rfp.FilePath)
-        .WithMany(fp => fp.RequestFilePaths)
-        .HasForeignKey(rfp => rfp.FilePathsId);
+        .HasOne(r => r.Requester)
+        .WithMany(p => p.RequestFilePaths)
+        .HasForeignKey(r => r.RequestDetailsId)
+        .OnDelete(DeleteBehavior.Cascade);
   }
 
 }

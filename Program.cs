@@ -16,7 +16,7 @@ builder.Services.ConfigureApplicationCookie(options =>
   options.ExpireTimeSpan = TimeSpan.FromDays(30);  // Çerez süresi (30 gün)
   options.SlidingExpiration = true;  // Eğer kullanıcı tekrar giriş yaparsa sürenin sıfırlanmasını sağlar
 });
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 

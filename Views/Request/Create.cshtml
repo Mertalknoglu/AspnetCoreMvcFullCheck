@@ -54,6 +54,12 @@
                     <textarea class="form-control" asp-for="Description" rows="3"></textarea>
                 </div>
                 <div class="mb-4">
+                    <label asp-for="RequestUnitId" class="control-label">Talep Edilen Birim</label>
+                    <select asp-for="RequestUnitId" class="form-control" asp-items="ViewBag.RequestUnitList">
+                        <option value="">Birim seçiniz</option>
+                    </select>
+                </div>
+                <div class="mb-4">
                     <label asp-for="RequestStatusId" class="control-label">Talep Durumu</label>
                     <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList"></select>
                 </div>

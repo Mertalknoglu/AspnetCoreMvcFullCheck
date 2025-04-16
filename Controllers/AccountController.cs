@@ -82,7 +82,7 @@ namespace AspnetCoreMvcFull.Controllers
         {
           // Yeni kullanıcı oluşturulduktan sonra giriş işlemi yapılabilir
           await _signInManager.SignInAsync(user, isPersistent: false);
-          return RedirectToAction("Index", "Home");
+          return RedirectToAction("Index", "Request");
         }
 
         foreach (var error in result.Errors)

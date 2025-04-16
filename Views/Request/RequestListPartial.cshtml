@@ -1,9 +1,9 @@
 @model List<AspnetCoreMvcFull.Models.Models.Request>
 
 @{
-    string kaynak = ViewData["gelen"]?.ToString() ?? "";
-    string tableId = kaynak == "true" ? "gonderilenTablo" : "gelenTablo";
-    bool isGelen = kaynak == "false";
+    string kaynak = ViewData["gelen"]?.ToString()?.ToLower() ?? "";
+    string tableId = kaynak == "true" ? "gelenTablo" : "gonderilenTablo";
+    bool isGelen = kaynak == "true";
 }
 
 @if (Model != null && Model.Any())
@@ -12,7 +12,6 @@
     <div class="d-none d-md-block">
         <div class="table-responsive">
             <table id="@tableId" class="table table-bordered align-middle">
-
                 <thead class="table-light">
                     <tr>
                         <th>Ad Soyad</th>
@@ -35,22 +34,18 @@
                             <td>@item.Date.ToString("dd.MM.yyyy")</td>
                             <td>@item.Description</td>
                             <td class="text-center">
-
-                                <button onclick="showDetails(@item.Id)" class="btn btn-sm btn-outline-dark me-1">@item.Id Detaylar</button>
-                                    @if (ViewBag.IsAdmin == true)
-                                    {
-                                    <a class="btn btn-sm btn-outline-primary me-1" href="@Url.Action("Edit", new { id = item.Id })">@item.Id  Güncelle</a>
-                                    }
-                                    <button onclick="openUpdateModal(@item.Id)" class="btn btn-sm btn-outline-primary me-1">
-                                        Düzenle
-                                    </button>
-                                    @if (kaynak == "false")
-                                    {
-                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">Sil</a>
-                                    }
-
-                           
-                               
+                                <button onclick="showDetails(@item.Id)" class="btn btn-sm btn-outline-dark me-1">
+                                    Detaylar
+                                </button>
+                                @if (ViewBag.IsAdmin == true)
+                                {
+                                    <a class="btn btn-sm btn-outline-primary me-1" href="@Url.Action("Edit", new { id = item.Id })">Güncelle</a>
+                                }
+                                <button onclick="openUpdateModal(@item.Id)" class="btn btn-sm btn-outline-primary me-1">Düzenle</button>
+                                @if (!isGelen)
+                                {
+                                    <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">Sil</a>
+                                }
                             </td>
                         </tr>
                     }
@@ -67,16 +62,36 @@
                 <div class="col">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
-                            <h5 class="card-title">@item.FirstName @item.Surname</h5>
-                            <p class="mb-1"><strong>Tipi:</strong> @item.RequestType?.Type</p>
-                            <p class="mb-1"><strong>Birim:</strong> @item.RequestUnit?.Unit</p>
-                            <p class="mb-1"><strong>Durum:</strong> @item.RequestStatus?.Status</p>
-                            <p class="mb-1"><strong>Tarih:</strong> @item.Date.ToString("dd.MM.yyyy")</p>
-                            <p class="mb-2"><strong>Açıklama:</strong> @item.Description</p>
-                        </div>
-                        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
-                            <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-outline-primary">Düzenle</a>
-                            <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">Sil</a>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">@item.FirstName @item.Surname</h5>
+                                <span class="badge bg-secondary">@item.RequestStatus?.Status</span>
+                            </div>
+                            <ul class="list-unstyled small mb-2">
+                                <li><strong>Tipi:</strong> @item.RequestType?.Type</li>
+                                <li><strong>Birim:</strong> @item.RequestUnit?.Unit</li>
+                                <li><strong>Tarih:</strong> @item.Date.ToString("dd.MM.yyyy")</li>
+                                <li><strong>Açıklama:</strong> @item.Description</li>
+                            </ul>
+                            <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+                                <button class="btn btn-sm btn-outline-dark" onclick="showDetails(@item.Id)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                @if (ViewBag.IsAdmin == true)
+                                {
+                                    <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", new { id = item.Id })">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                }
+                                <button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal(@item.Id)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                @if (!isGelen)
+                                {
+                                    <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,9 +103,62 @@ else
 {
     <div class="alert alert-info text-center">Kayıt bulunamadı.</div>
 }
-
-
 <script>
+    // DataTables'ı her tablo için başlat
+    $(document).ready(function () {
+        const tablolar = ['#gelenTablo', '#gonderilenTablo'];
+           tablolar.forEach(function (selector) {
+        const tablo = $(selector);
+        if (tablo.length && !$.fn.DataTable.isDataTable(tablo)) {
+            tablo.DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true,
+                dom: 'Bfrtip',
+                   dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+
+        buttons: [
+        {
+            extend: 'collection',
+            text: 'Dışa Aktar',
+            className: 'btn btn-secondary', // Bootstrap 5 görünüm için
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Kopyala'
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel'
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV'
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF'
+                },
+                {
+                    extend: 'print',
+                    text: 'Yazdır'
+                }
+            ]
+        }
+    ],
+
+
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                }
+            });
+        }
+    });
+
+    });
+
+    // Detayları gösteren modalı aç
     function showDetails(id) {
         $.ajax({
             url: '/Request/GetDetails/' + id,
@@ -129,7 +197,6 @@ else
                 }
 
                 $('#modalFiles').html(fileHtml);
-
                 const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
                 modal.show();
             },
@@ -139,13 +206,11 @@ else
         });
     }
 
-
-
-    // Güncelle modal açma fonksiyonu
+    // Güncelleme modalı aç
     function openUpdateModal(id) {
         $('#updateRequestId').val(id);
 
-        // önce mevcut dosyaları yükle
+        // 1. Mevcut dosyaları yükle
         $.ajax({
             url: `/Request/GetFiles/${id}`,
             type: 'GET',
@@ -166,7 +231,7 @@ else
             }
         });
 
-        // sonra diğer bilgileri doldur
+        // 2. Talep bilgilerini yükle
         $.ajax({
             url: '/Request/GetDetails/' + id,
             type: 'GET',
@@ -192,7 +257,6 @@ else
             }
         });
     }
-    
 
     // Dosya silme fonksiyonu
     function deleteFile(path, requestId) {
@@ -236,34 +300,4 @@ else
             }
         });
     });
-
 </script>
-<script>
-    $(document).ready(function () {
-        const gelen = $('#gelenTablo');
-        const gonderilen = $('#gonderilenTablo');
-
-        if (gelen.length && !$.fn.DataTable.isDataTable(gelen)) {
-            gelen.DataTable({
-                paging: true,
-                searching: true,
-                ordering: true,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
-                }
-            });
-        }
-
-        if (gonderilen.length && !$.fn.DataTable.isDataTable(gonderilen)) {
-            gonderilen.DataTable({
-                paging: true,
-                searching: true,
-                ordering: true,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
-                }
-            });
-        }
-    });
-</script>
-

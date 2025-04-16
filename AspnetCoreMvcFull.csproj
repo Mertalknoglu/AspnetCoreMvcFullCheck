@@ -7,6 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\uploads\15e00b52-2f22-47d5-9adb-b6dde7422d3c_IMG-20230918-WA0007.jpg" />
+    <Content Remove="wwwroot\uploads\1fcafeed-2a3f-48dc-a64a-7a6ac63eea90_IMG-20230923-WA0007.jpg" />
+    <Content Remove="wwwroot\uploads\2058ce54-0061-4deb-9257-e400bfd5906b_IMG-20230915-WA0012.jpg" />
+    <Content Remove="wwwroot\uploads\380111b9-46ac-492b-9f65-0c9a4c34b1e9_IMG-20230914-WA0004.jpeg" />
+    <Content Remove="wwwroot\uploads\779b18ab-aad8-40c3-a987-37461ae77ac9_IMG-20230918-WA0002.jpg" />
+    <Content Remove="wwwroot\uploads\aa49700e-d7b2-459b-930d-3d39d2f07ebb_IMG-20230915-WA0012.jpg" />
+    <Content Remove="wwwroot\uploads\f1cf99ef-4346-4ade-aec2-4691e2dfe854_IMG-20230918-WA0002.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20230914-WA0002.jpeg" />
+    <Content Remove="wwwroot\uploads\IMG-20230915-WA0011.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20230923-WA0006.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20230923-WA0007.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20230924-WA0004.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20231001-WA0004.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20231001-WA0005.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20231001-WA0021.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20231110-WA0013.jpg" />
+    <Content Remove="wwwroot\uploads\IMG-20231110-WA0015.jpg" />
+    <Content Remove="wwwroot\uploads\WhatsApp Görsel 2025-02-12 saat 11.08.08_83d469c4.jpg" />
+    <Content Remove="wwwroot\uploads\WhatsApp Görsel 2025-02-12 saat 11.08.08_963d0594.jpg" />
+    <Content Remove="wwwroot\uploads\WhatsApp Görsel 2025-02-12 saat 11.08.09_a2fa5da0.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.13">

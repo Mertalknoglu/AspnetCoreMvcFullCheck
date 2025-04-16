@@ -51,9 +51,13 @@
                         <div class="mb-6">
                             <input asp-for="TcKimlikNo" class="form-control " placeholder="T.C Kimlik Numarası" autocomplete="off" />
                         </div>
-                        <div class="mb-6 form-password-toggle">
-                            <input type="password" id="password" class="form-control " asp-for="Password" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" autocomplete="off" />
-                        </div>
+                            <div class="mb-6 form-password-toggle">
+                                <label class="form-label" for="password"></label>
+                                <div class="input-group input-group-merge">
+                                     <input type="password" id="password" class="form-control " asp-for="Password" name="password"  placeholder="Parola" aria-describedby="password" />
+                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                </div>
+                            </div>
                         <div class="mb-8">
                             <div class="d-flex justify-content-between mt-8">
                                 <div class="form-check mb-0 ms-2">

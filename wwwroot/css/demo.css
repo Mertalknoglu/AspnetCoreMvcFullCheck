@@ -2,6 +2,38 @@
 * demo.css
 * File include item demo only specific css only
 ******************************************************************************/
+/* Sayfanın yatay taşmasını engelle */
+
+body, html {
+  overflow-x: hidden;
+}
+
+/* Talep Oluştur butonunu mobilde küçült */
+@media (max-width: 768px) {
+  .btn-dark {
+    font-size: 0.85rem;
+    padding: 0.375rem 0.75rem;
+  }
+
+  /* Sekme yazıları (Sana Gelen / Gönderdiğin Talepler) */
+  .nav-tabs .nav-link {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    white-space: nowrap;
+  }
+
+  /* Kart aksiyon butonları ortalanır */
+  .card-body .d-flex.justify-content-end {
+    justify-content: center !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Kart içinde aksiyon butonları için ikon boyutu */
+  .card-body .btn-sm i {
+    font-size: 1rem;
+  }
+}
 
 .menu .app-brand.demo {
   height: 64px;

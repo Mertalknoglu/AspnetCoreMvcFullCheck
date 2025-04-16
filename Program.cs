@@ -56,5 +56,8 @@ app.UseEndpoints(endpoints =>
       pattern: "{controller=Account}/{action=Login}/{id?}");
 });
 
+app.UseExceptionHandler("/Error/500"); // özel hata sayfasına yönlendirme
+app.UseStatusCodePagesWithReExecute("/Error/{0}"); // 404 gibi durumlar için
+
 
 app.Run();

@@ -1,0 +1,18 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.querySelector('.layout-menu-toggle a');
+        const layoutMenu = document.getElementById('layout-menu');
+
+        if (toggleBtn && layoutMenu) {
+            toggleBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                layoutMenu.classList.toggle('show-menu');
+            });
+        }
+    });
+    document.querySelector('.layout-overlay')?.classList.add('active');
+        layoutMenu.classList.remove('show-menu');
+    document.querySelector('.layout-overlay')?.classList.remove('active');
+
+</script>
+<div class="layout-overlay" onclick="document.getElementById('layout-menu').classList.remove('show-menu'); this.classList.remove('active');"></div>

@@ -1,5 +1,7 @@
+using AspnetCoreMvcFull.Models.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AspnetCoreMvcFull.Models
 {
@@ -19,9 +21,10 @@ namespace AspnetCoreMvcFull.Models
     public string LastName { get; set; }
 
     [Required]
-    [StringLength(100)]
     public int UnitId { get; set; }
 
+    [ForeignKey("UnitId")]
+    public virtual RequestUnit? Unit { get; set; }
     public bool IsAdmin { get; set; }
   }
 

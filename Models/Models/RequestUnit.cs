@@ -1,9 +1,9 @@
-using AspnetCoreMvcFull.Models.Models;
-
-public class RequestUnit
+namespace AspnetCoreMvcFull.Models.Models
 {
-  public int Id { get; set; }
-  public string Unit { get; set; }
-
-  public ICollection<Request> Requesters { get; set; }
+  public class RequestUnit
+  {
+    public int Id { get; set; }
+    public string Unit { get; set; }
+    public ICollection<Request> Requesters { get; set; }
+  }
 }

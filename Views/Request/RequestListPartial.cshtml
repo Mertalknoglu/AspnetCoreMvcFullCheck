@@ -11,15 +11,16 @@
     <!-- Masaüstü görünüm -->
     <div class="d-none d-md-block">
         <div class="table-responsive">
-            <table id="@tableId" class="table table-bordered align-middle">
+            <table id="@tableId" class="table table-striped table-bordered align-middle w-100">
                 <thead class="table-light">
                     <tr>
-                        <th>Ad Soyad</th>
-                        <th>Talep Tipi</th>
-                        <th>Birim</th>
-                        <th>Durum</th>
-                        <th>Tarih</th>
-                        <th>Açıklama</th>
+                        <th></th>
+                        <th>Ad Soyad <b>↑↓</b></th>
+                        <th>Talep Tipi <b>↑↓</b></th>
+                        <th>Birim <b>↑↓</b></th>
+                        <th>Durum <b>↑↓</b></th>
+                        <th>Tarih <b>↑↓</b> </th>
+                        <th>Açıklama <b>↑↓</b></th>
                         <th class="text-center">İşlem</th>
                     </tr>
                 </thead>
@@ -27,25 +28,37 @@
                     @foreach (var item in Model)
                     {
                         <tr>
+                                   <td>@item.Id</td>
                             <td>@item.FirstName @item.Surname</td>
                             <td>@item.RequestType?.Type</td>
                             <td>@item.RequestUnit?.Unit</td>
                             <td>@item.RequestStatus?.Status</td>
-                            <td>@item.Date.ToString("dd.MM.yyyy")</td>
+                            <td>@item.Date.ToString("dd.MM.yyyy HH:mm")</td>
                             <td>@item.Description</td>
                             <td class="text-center">
-                                <button onclick="showDetails(@item.Id)" class="btn btn-sm btn-outline-dark me-1">
-                                    Detaylar
-                                </button>
-                                @if (ViewBag.IsAdmin == true)
-                                {
-                                    <a class="btn btn-sm btn-outline-primary me-1" href="@Url.Action("Edit", new { id = item.Id })">Güncelle</a>
-                                }
-                                <button onclick="openUpdateModal(@item.Id)" class="btn btn-sm btn-outline-primary me-1">Düzenle</button>
-                                @if (!isGelen)
-                                {
-                                    <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">Sil</a>
-                                }
+                                <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap">
+                                    <button class="btn btn-sm btn-outline-dark" title="Detaylar" onclick="showDetails(@item.Id)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                    @if (ViewBag.IsAdmin == true)
+                                    {
+                                        <a class="btn btn-sm btn-outline-primary" title="Güncelle" href="@Url.Action("Edit", new { id = item.Id })">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    }
+
+                                    <button class="btn btn-sm btn-outline-primary" title="Düzenle" onclick="openUpdateModal(@item.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
+                                    @if (!isGelen)
+                                    {
+                                                 <button class="btn btn-sm btn-outline-danger" onclick=" deleteRequest(@item.Id)">
+                                                <i class="bi bi-trash"></i>
+                                              </button>
+                                    }
+                                </div>
                             </td>
                         </tr>
                     }
@@ -54,9 +67,11 @@
         </div>
     </div>
 
+
     <!-- Mobil görünüm -->
     <div class="d-block d-md-none">
         <div class="row row-cols-1 g-3">
+
             @foreach (var item in Model)
             {
                 <div class="col">
@@ -86,10 +101,10 @@
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 @if (!isGelen)
-                                {
-                                    <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                {                                    
+                                  <button class="btn btn-sm btn-outline-danger" onclick=" deleteRequest(@item.Id)">
+                                    <i class="bi bi-trash"></i>
+                                  </button>
                                 }
                             </div>
                         </div>
@@ -102,60 +117,90 @@
 else
 {
     <div class="alert alert-info text-center">Kayıt bulunamadı.</div>
+    <a href="@Url.Action("Index", "Request")" class="btn btn-secondary align-items-center">Filtreyi Kaldır</a>
 }
+<!-- Export Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="exportModalLabel" style="color:white;">Verileri Dışa Aktar</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary" onclick="exportMobile('excel')"> <i class="bi bi-file-earmark-arrow-down"></i>Excel</button>
+                    <button class="btn btn-outline-primary" onclick="exportMobile('csv')"><i class="bi bi-file-earmark-arrow-down"></i> CSV</button>
+                    <button class="btn btn-outline-primary" onclick="exportMobile('pdf')"><i class="bi bi-file-earmark-arrow-down"></i> PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" style="color:white;">Filtreleme Yap</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get" action="@Url.Action("FilteredIndex", "Request")">
+                <div class="modal-body">
+                    <input class="form-control mb-2" name="name" placeholder="Ad Soyad">
+                    <input class="form-control mb-2" name="type" placeholder="Talep Tipi">
+                    <input class="form-control mb-2" name="unit" placeholder="Birim">
+                    <input class="form-control mb-2" name="status" placeholder="Durum">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Filtrele</button>
+                    <a href="@Url.Action("Index", "Request")" class="btn btn-secondary">Filtreyi Kaldır</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
-    // DataTables'ı her tablo için başlat
-    $(document).ready(function () {
-        const tablolar = ['#gelenTablo', '#gonderilenTablo'];
-           tablolar.forEach(function (selector) {
-        const tablo = $(selector);
-        if (tablo.length && !$.fn.DataTable.isDataTable(tablo)) {
-            tablo.DataTable({
-                paging: true,
-                searching: true,
-                ordering: true,
-                responsive: true,
-                dom: 'Bfrtip',
-                   dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+     $(document).ready(function () {
+        // Her iki tablo için ayrı ayrı DataTable başlat
+        ['#gelenTablo', '#gonderilenTablo'].forEach(function (selector) {
+            const tablo = $(selector);
+            if (tablo.length && !$.fn.DataTable.isDataTable(tablo)) {
+                tablo.DataTable({
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    responsive: true,
+                    dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+                    buttons: [
+                        {
+                            extend: 'collection',
+                            text: 'Dışa Aktar',
+                            className: 'btn btn-secondary',
+                            buttons: [
+                                { extend: 'copy', text: 'Kopyala' },
+                                { extend: 'excel', text: 'Excel' },
+                                { extend: 'csv', text: 'CSV' },
+                                { extend: 'pdf', text: 'PDF' },
+                                { extend: 'print', text: 'Yazdır' }
+                            ]
+                        }
+                    ],
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                    }
+                });
+            }
+        });
 
-        buttons: [
-        {
-            extend: 'collection',
-            text: 'Dışa Aktar',
-            className: 'btn btn-secondary', // Bootstrap 5 görünüm için
-            buttons: [
-                {
-                    extend: 'copy',
-                    text: 'Kopyala'
-                },
-                {
-                    extend: 'excel',
-                    text: 'Excel'
-                },
-                {
-                    extend: 'csv',
-                    text: 'CSV'
-                },
-                {
-                    extend: 'pdf',
-                    text: 'PDF'
-                },
-                {
-                    extend: 'print',
-                    text: 'Yazdır'
-                }
-            ]
-        }
-    ],
-
-
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
-                }
-            });
-        }
-    });
-
+        // Tab geçişinde tablo yeniden boyutlandırılsın (gizli gelen tablo sorununu çözer)
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            const targetId = $(e.target).attr("data-bs-target");
+            const table = $(targetId).find('table').DataTable();
+            table.columns.adjust().responsive.recalc();
+        });
     });
 
     // Detayları gösteren modalı aç
@@ -207,79 +252,76 @@ else
     }
 
     // Güncelleme modalı aç
-    function openUpdateModal(id) {
-        $('#updateRequestId').val(id);
+   function openUpdateModal(id) {
+    $('#updateRequestId').val(id);
 
-        // 1. Mevcut dosyaları yükle
-        $.ajax({
-            url: `/Request/GetFiles/${id}`,
-            type: 'GET',
-            success: function (filesData) {
-                let html = '';
-                filesData.forEach(file => {
-                    html += `
-                        <div class="position-relative" style="width: 120px;">
-                            <img src="${file}" class="img-thumbnail" style="height:100px; object-fit:cover;" />
-                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
-                                onclick="deleteFile('${file}', ${id})" style="border-radius:50%;">×</button>
-                        </div>`;
-                });
-                $('#existingFiles').html(html);
-            },
-            error: function () {
-                alert("Dosyalar yüklenemedi.");
+    // 1. Mevcut dosyaları getir
+    $.ajax({
+        url: `/Request/GetFiles/${id}`,
+        type: 'GET',
+        success: function (filesData) {
+            let html = '';
+            filesData.forEach(file => {
+                html += `
+                    <div class="position-relative" style="width: 120px;">
+                        <img src="${file}" class="img-thumbnail" style="height:100px; object-fit:cover;" />
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                            onclick="deleteFile('${file}', ${id})" style="border-radius:50%;">×</button>
+                    </div>`;
+            });
+            $('#existingFiles').html(html);
+        }
+    });
+
+    // 2. Talep detaylarını getir
+    $.ajax({
+        url: `/Request/GetDetails/${id}`,
+        type: 'GET',
+        success: function (data) {
+            if (!data.success) {
+                alert(data.message);
+                return;
             }
-        });
 
-        // 2. Talep bilgilerini yükle
-        $.ajax({
-            url: '/Request/GetDetails/' + id,
-            type: 'GET',
-            success: function (data) {
-                if (data.success === false) {
-                    alert(data.message);
-                    return;
-                }
+            // dropdownları güncelle
+            $('#RequestTypeId').val(data.requestTypeId);
+            $('#RequestUnitId').val(data.requestUnitId);
+            $('#RequestStatusId').val(data.requestStatusId);
 
-                $('#Address').val(data.address);
-                $('#Tckn').val(data.tckn);
-                $('#FirstName').val(data.firstName);
-                $('#Surname').val(data.surname);
-                $('#TelNo').val(data.telNo);
-                $('#Email').val(data.email);
-                $('#Description').val(data.description);
+            const updateModal = new bootstrap.Modal(document.getElementById('updateRequestModal'));
+            updateModal.show();
+        }
+    });
+}
 
-                const updateModal = new bootstrap.Modal(document.getElementById('updateRequestModal'));
-                updateModal.show();
-            },
-            error: function () {
-                alert("Detaylar yüklenemedi.");
+
+function deleteRequest(id) {
+    if (!confirm("Bu talebi silmek istediğinize emin misiniz?")) return;
+
+    $.ajax({
+        url: '/Request/DeleteConfirmed/' + id,
+        type: 'POST',
+        success: function (res) {
+            if (res.success) {
+                alert("Silindi!");
+                location.reload();
+            } else {
+                alert("Hata oluştu: " + res.message);
             }
-        });
-    }
+        },
+        error: function () {
+            alert("Silme işlemi sırasında hata oluştu.");
+        }
+    });
+}
 
-    // Dosya silme fonksiyonu
-    function deleteFile(path, requestId) {
-        if (!confirm("Dosya silinsin mi?")) return;
-
-        $.ajax({
-            url: '/Request/DeleteFile',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ filePath: path, requestId: requestId }),
-            success: function () {
-                openUpdateModal(requestId);
-            }
-        });
-    }
-
-    // Güncelleme formu
-    $("#updateRequestForm").off('submit').on('submit', function (e) {
+$(document).ready(function () {
+    $('#updateRequestForm').off('submit').on('submit', function (e) {
         e.preventDefault();
 
-        const form = document.getElementById("updateRequestForm");
-        const formData = new FormData(form);
         const id = $('#updateRequestId').val();
+        const form = document.getElementById('updateRequestForm');
+        const formData = new FormData(form);
 
         $.ajax({
             url: `/Request/EditAjax/${id}`,
@@ -292,12 +334,87 @@ else
                     alert("Talep başarıyla güncellendi!");
                     location.reload();
                 } else {
-                    alert(response.message || "Güncelleme sırasında hata oluştu.");
+                    alert(response.message || "Güncelleme başarısız.");
                 }
             },
-            error: function (xhr) {
-                alert("Bir hata oluştu: " + xhr.responseText);
+            error: function () {
+                alert("Sunucu hatası oluştu.");
             }
         });
     });
+});
+
+
+</script>
+
+            <script>
+    async function exportMobile(type) {
+        const cards = document.querySelectorAll(".d-block.d-md-none .card");
+        const headers = ["Ad Soyad", "Tipi", "Birim", "Tarih", "Açıklama", "Durum"];
+        let rows = [];
+
+        cards.forEach(card => {
+            const name = card.querySelector(".card-title").innerText.trim();
+            const status = card.querySelector(".badge").innerText.trim();
+            const detailElements = card.querySelectorAll("ul.list-unstyled li");
+
+            let type = detailElements[0]?.innerText.replace('Tipi:', '').trim();
+            let unit = detailElements[1]?.innerText.replace('Birim:', '').trim();
+            let date = detailElements[2]?.innerText.replace('Tarih:', '').trim();
+            let description = detailElements[3]?.innerText.replace('Açıklama:', '').trim();
+
+            rows.push({ "Ad Soyad": name, "Tipi": type, "Birim": unit, "Tarih": date, "Açıklama": description, "Durum": status });
+        });
+
+        if (type === "excel") {
+            const ws = XLSX.utils.json_to_sheet(rows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Talepler");
+            XLSX.writeFile(wb, "talepler.xlsx");
+        }
+        else if (type === "csv") {
+            const ws = XLSX.utils.json_to_sheet(rows);
+            const csvData = XLSX.utils.sheet_to_csv(ws, { FS: ";" });
+            const blob = new Blob(["\uFEFF" + csvData], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "talepler.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        else if (type === "pdf") {
+            const tableHtml = `
+                <table style="font-family:Arial, sans-serif; border-collapse:collapse; width:100%;">
+                    <thead style="background:#34495e;color:#fff;">
+                        <tr>${headers.map(h => `<th style="padding:6px;border:1px solid #ccc;">${h}</th>`).join('')}</tr>
+                    </thead>
+                    <tbody>
+                        ${rows.map(row => `
+                            <tr>${Object.values(row).map(value => `<td style="padding:6px;border:1px solid #ccc;">${value}</td>`).join('')}</tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+
+            const pdfContainer = document.createElement("div");
+            pdfContainer.innerHTML = tableHtml;
+            pdfContainer.style.position = 'fixed';
+            pdfContainer.style.top = '-9999px';
+            document.body.appendChild(pdfContainer);
+
+            html2canvas(pdfContainer, { scale: 2 }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jspdf.jsPDF('landscape');
+                const imgWidth = pdf.internal.pageSize.getWidth();
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save("talepler.pdf");
+                document.body.removeChild(pdfContainer);
+            });
+        }
+    }
+
+
 </script>

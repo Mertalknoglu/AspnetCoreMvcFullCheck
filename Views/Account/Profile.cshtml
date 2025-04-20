@@ -1,0 +1,88 @@
+@model AspnetCoreMvcFull.Models.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profil Ayarları";
+    var message = TempData["SuccessMessage"];
+    TempData.Remove("SuccessMessage"); // 👈 burada siliyoruz, garanti oluyor
+}
+
+
+@section PageScripts {
+    <script src="~/js/pages-account-settings-account.js"></script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- Profil Bilgileri -->
+        <div class="card mb-4">
+            <h5 class="card-header">Profil Bilgileri</h5>
+            <div class="card-body">
+               
+
+
+
+                <form asp-action="UpdateProfile" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="form-label">İsim</label>
+                            <input asp-for="FirstName" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastName" class="form-label">Soyisim</label>
+                            <input asp-for="LastName" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label">E-Mail</label>
+                            <input asp-for="Email" type="email" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label">Telefon</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Birim</label>
+                            <input type="text" class="form-control" value="@Model.UnitName" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Yetki</label>
+                            <input type="text" class="form-control" value="@Model.Yetki" readonly />
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary me-2">Bilgileri Güncelle</button>
+                        <button type="reset" class="btn btn-outline-secondary">Vazgeç</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Şifre Değiştir -->
+        <div class="card" id="passwordSection">
+            <h5 class="card-header">Şifre Değiştir</h5>
+            <div class="card-body">
+                <form asp-action="ChangePassword" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="CurrentPassword" class="form-label">Mevcut Şifre</label>
+                            <input asp-for="CurrentPassword" type="password" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NewPassword" class="form-label">Yeni Şifre</label>
+                            <input asp-for="NewPassword" type="password" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmPassword" class="form-label">Yeni Şifre (Tekrar)</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary me-2">Şifreyi Güncelle</button>
+                        <button type="reset" class="btn btn-outline-secondary">Vazgeç</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

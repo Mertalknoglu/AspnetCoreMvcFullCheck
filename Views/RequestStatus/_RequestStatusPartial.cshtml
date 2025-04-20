@@ -1,0 +1,165 @@
+@model List<AspnetCoreMvcFull.Models.Models.RequestStatus>
+
+@if (Model != null && Model.Any())
+{
+    <!-- Masaüstü görünüm -->
+    <div class="d-none d-md-block">
+        <div class="table-responsive">
+            <table id="statusTable" class="table table-striped table-bordered align-middle w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Durum Adı</th>
+                        <th class="text-center">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var status in Model)
+                    {
+                        <tr>
+                            <td>@status.Id</td>
+                            <td>@status.Status</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button class="btn btn-sm btn-outline-dark" onclick="openRequestStatusDetailModal(@status.Id)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="openRequestStatusEditModal(@status.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteRequestStatus(@status.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mobil görünüm -->
+    <div class="d-block d-md-none">
+        <div class="row row-cols-1 g-3">
+            @foreach (var status in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">#@status.Id</h5>
+                            </div>
+                            <ul class="list-unstyled small mb-2">
+                                <li><strong>Durum:</strong> @status.Status</li>
+                            </ul>
+                            <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+                                <button class="btn btn-sm btn-outline-dark" onclick="openRequestStatusDetailModal(@status.Id)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="openRequestStatusEditModal(@status.Id)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteRequestStatus(@status.Id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">Hiç talep durumu bulunamadı.</div>
+}
+<!-- Durum Güncelleme Modalı -->
+<div class="modal fade" id="editStatusModal" tabindex="-1" aria-labelledby="editStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editStatusModalLabel">Talep Durumu Güncelle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted">
+                <form id="editStatusForm" method="post">
+                    <input type="hidden" id="updateStatusId" name="Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Durum Adı</label>
+                        <input type="text" class="form-control" name="Status" id="updateStatusName" required />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-dark">Güncelle</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Durum Detay Modalı Aç
+    function openRequestStatusDetailModal(id) {
+        $.get('/RequestStatus/GetById/' + id, function (data) {
+            if (data.success) {
+                // Veriyi modal'a yerleştir
+                $('#detailStatusId').text(data.data.id);  // ID
+                $('#detailStatusName').text(data.data.status);  // Durum Adı
+
+                // Modal'ı göster
+                const modal = new bootstrap.Modal(document.getElementById('statusDetailModal'));
+                modal.show();
+            } else {
+                alert("Durum bilgisi alınamadı.");
+            }
+        });
+    }
+
+    // Durum Güncelleme Modalı Aç
+    function openRequestStatusEditModal(id) {
+        $.get('/RequestStatus/GetById/' + id, function (data) {
+            if (data.success) {
+                $('#updateStatusId').val(data.data.id);  // ID
+                $('#updateStatusName').val(data.data.status);  // Durum Adı
+
+                // Modal'ı göster
+                const modal = new bootstrap.Modal(document.getElementById('editStatusModal'));
+                modal.show();
+            } else {
+                alert("Durum bulunamadı.");
+            }
+        });
+    }
+
+    // Güncelleme Gönder
+    $('#editStatusForm').off('submit').on('submit', function (e) {
+        e.preventDefault();
+        const formData = $(this).serialize();  // Form verilerini alıyoruz
+
+        $.post('/RequestStatus/Edit', formData, function (res) {
+            if (res.success) {
+                alert(res.message);  // Başarılı mesajı
+                location.reload();  // Sayfayı yeniden yükle
+            } else {
+                alert("Hata: " + res.message);  // Hata mesajı
+            }
+        });
+    });
+
+    // Durum Sil
+    function deleteRequestStatus(id) {
+        if (!confirm("Bu talep durumunu silmek istiyor musunuz?")) return;
+
+        $.post('/RequestStatus/Delete', { id: id }, function (res) {
+            if (res.success) {
+                alert("Durum silindi.");
+                location.reload();  // Sayfayı yeniden yükle
+            } else {
+                alert("Silme işlemi başarısız.");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,37 @@
+@model AspnetCoreMvcFull.Models.ViewModel.CreateRequestStatusViewModel
+
+@{
+    ViewData["Title"] = "Yeni Talep Durumu Oluştur";
+}
+
+<div class="card">
+    <h5 class="card-header">Yeni Talep Durumu Oluştur</h5>
+    <div class="card-body">
+        <p class="mb-4">Yeni bir talep durumu oluşturmak için aşağıdaki alanı doldurun.</p>
+
+        @if (ViewBag.Errors is List<string> errors && errors.Any())
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in errors)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label">Talep Durumu</label>
+                <input asp-for="Status" class="form-control" required />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary me-2">Talep Durumu Listesine Dön</a>
+                <button type="submit" class="btn btn-dark">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>

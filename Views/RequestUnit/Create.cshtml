@@ -1,0 +1,33 @@
+@model AspnetCoreMvcFull.Models.ViewModel.CreateRequestUnitViewModel
+
+@{
+    ViewData["Title"] = "Yeni Birim Oluştur";
+}
+
+<div class="card">
+    <h5 class="card-header">Yeni Birim Oluştur</h5>
+    <div class="card-body">
+        <p class="mb-4">Yeni bir birim oluşturmak için aşağıdaki alanı doldurup kaydedebilirsiniz.</p>
+
+
+        <form asp-action="Create" method="post">
+            <div class="row">
+                <!-- Birim Adı -->
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Unit" class="form-label">Birim Adı</label>
+                    <input asp-for="Unit" class="form-control" required />
+                    <span asp-validation-for="Unit" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("Index", "RequestUnit")" class="btn btn-outline-secondary me-2">Birim Listesine Dön</a>
+                <button type="submit" class="btn btn-dark">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

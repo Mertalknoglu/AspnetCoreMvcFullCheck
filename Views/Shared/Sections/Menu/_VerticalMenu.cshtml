@@ -1,36 +1,77 @@
 @{
-  TempData.Keep();
-  string? currentPage = ViewContext.HttpContext.Request.Path;
+    var admin=ViewBag.IsAdmin;
+
+    string? currentPage = ViewContext.HttpContext.Request.Path;
 }
 
-<!-- Menu -->
-@* ! Do this simple *@
+<!-- Sidebar -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
-  @* ! Hide app brand if navbar-full *@
-  <div class='app-brand demo justify-content-center @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
-    <a asp-controller="Request" asp-action="Index" class="app-brand-link">
-      <span class="app-brand-logo demo">
-                <img class="justify-content-center"  src="~/img/logonun dikey renkli kullanımı.png" height="50" width="50" />
-    </a>
-    <hr>
-        <a asp-controller="Requester" asp-action="Index" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-      <i class="bx bx-chevron-left bx-sm d-flex align-items-center "></i>
-    </a>
-  </div>
+    <!-- Logo -->
+    <div class='app-brand demo justify-content-center @((@ViewData["navbarFull"] != null && Convert.ToBoolean(@ViewData["navbarFull"])) ? "d-xl-none" : "")'>
+        <a asp-controller="Request" asp-action="Index" class="app-brand-link">
+            <span class="app-brand-logo demo">
+                <img src="~/img/logob.png" height="50" width="50" />
+            </span>
+        </a>
+        <hr>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm d-flex align-items-center"></i>
+        </a>
+    </div>
 
-  <div class="menu-inner-shadow"></div>
+    <div class="menu-inner-shadow"></div>
 
+    <ul class="menu-inner py-1">
 
-
-            <!-- Components -->
+        <!-- Başlık -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Menü</span></li>
-        <!-- Cards -->
-        <li class='menu-item@(currentPage == "/Requester/Index" ? " active" : "")'>
-            <a asp-controller="Request asp-action="Index" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-smile"></i>
-                <div class="text-truncate" data-i18n="Dashboards">Talep Listesi</div>
+
+        <!-- Talep Listesi -->
+        <li class='menu-item @(currentPage.StartsWith("/Request") ? "active" : "")'>
+            <a asp-controller="Request" asp-action="Index" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                <div>Talep Listesi</div>
             </a>
         </li>
+
+        @if (admin ==true)
+{
+        <!-- Kullanıcı Listesi -->
+        <li class='menu-item @(currentPage.StartsWith("/User") ? "active" : "")'>
+            <a asp-controller="User" asp-action="Index" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div>Kullanıcı Listesi</div>
+            </a>
+        </li>
+
+        <!-- Talep İşlemleri -->
+        <li class='menu-item @(currentPage.StartsWith("/Units") || currentPage.StartsWith("/Operations") || currentPage.StartsWith("/Types") ? "active open" : "")'>
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div>Talep İşlemleri</div>
+            </a>
+            <ul class="menu-sub">
+                <li class='menu-item @(currentPage.StartsWith("/RequestUnit") ? "active" : "")'>
+                    <a asp-controller="RequestUnit" asp-action="Index" class="menu-link">
+                        <div>Birim Listesi</div>
+                    </a>
+                </li>
+
+                <li class='menu-item @(currentPage.StartsWith("/Operations") ? "active" : "")'>
+                    <a asp-controller="RequestStatus" asp-action="Index" class="menu-link">
+
+                      <div>Durum Listesi</div>
+                    </a>
+                </li>
+                <li class='menu-item @(currentPage.StartsWith("/Types") ? "active" : "")'>
+                    <a asp-controller="RequestType" asp-action="Index" class="menu-link">
+                        <div>İşlem Tipi Listesi</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        }
+    </ul>
 </aside>
-<!-- / Menu -->

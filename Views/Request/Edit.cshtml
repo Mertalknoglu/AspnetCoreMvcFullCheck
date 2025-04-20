@@ -1,20 +1,13 @@
 @model AspnetCoreMvcFull.Models.Models.Request
 
 @{
-    ViewData["Title"] = "Edit Requester";
+    ViewData["Title"] = "Talep Güncelle";
 }
 
 <div class="col-md-12 justify-content-center">
     <div class="card">
-        <h4 class="card-header">Talep Güncelleme</h4>
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <h5 class="card-header">Talep oluştur ekranından seçtiğiniz talebi güncelleyebilirsiniz.</h5>
-            <div>
-                <h5 class="card-header justify-content-right">
-                    <a class="btn btn-dark" href="@Url.Action("Create")">Talep Oluştur</a>
-                </h5>
-            </div>
-        </div>
+        <h4 class="card-header">Talep Güncelle</h4>
+        <h5 class="card-header justify-content-center">Daha önce oluşturduğunuz talep bilgilerini güncelleyebilirsiniz.</h5>
         <div class="card-body">
             <div>
                 @if (ViewBag.Errors != null && ViewBag.Errors is List<string> errors)
@@ -33,66 +26,65 @@
             <form asp-action="Edit" enctype="multipart/form-data">
                 <input type="hidden" asp-for="Id" />
 
-                <div class="mb-4">
-                    <label asp-for="Tckn" class="control-label">T.C Kimlik No</label>
-                    <input asp-for="Tckn" class="form-control" maxlength="11" />
-                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Tckn" class="form-label">T.C Kimlik No</label>
+                        <input asp-for="Tckn" class="form-control"
+                               maxlength="11" minlength="11"
+                               pattern="[0-9]{11}"
+                               title="11 haneli rakamlardan oluşmalıdır."
+                               required />
+                        <span asp-validation-for="Tckn" class="text-danger"></span>
+                    </div>
 
-                <div class="mb-4">
-                    <label asp-for="FirstName" class="control-label">İsim</label>
-                    <input asp-for="FirstName" class="form-control" />
-                </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="TelNo" class="form-label">Telefon Numarası</label>
+                        <input asp-for="TelNo" class="form-control" />
+                    </div>
 
-                <div class="mb-4">
-                    <label asp-for="Surname" class="control-label">Soyisim</label>
-                    <input asp-for="Surname" class="form-control" />
-                </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="FirstName" class="form-label">İsim</label>
+                        <input asp-for="FirstName" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Email" class="form-label">E-Mail</label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
 
-                <div class="mb-4">
-                    <label asp-for="Email" class="control-label">E-Mail</label>
-                    <input asp-for="Email" class="form-control" />
-                </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Surname" class="form-label">Soyisim</label>
+                        <input asp-for="Surname" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Address" class="form-label">Adres</label>
+                        <input asp-for="Address" class="form-control" />
+                    </div>
 
-                <div class="mb-4">
-                    <label asp-for="TelNo" class="control-label">Telefon Numarası</label>
-                    <input asp-for="TelNo" class="form-control" maxlength="11" />
-                </div>
+                    <div class="col-md-12 mb-4">
+                        <label asp-for="Description" class="form-label">Açıklama</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
 
-                <div class="mb-4">
-                    <label asp-for="Address" class="control-label">Adres</label>
-                    <input asp-for="Address" class="form-control" />
-                </div>
+                    <div class="col-md-4 mb-4">
+                        <label asp-for="RequestUnitId" class="form-label">Talep Edilen Birim</label>
+                        <select asp-for="RequestUnitId" class="form-control" asp-items="ViewBag.RequestUnitList"></select>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label asp-for="RequestStatusId" class="form-label">Talep Durumu</label>
+                        <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList"></select>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label asp-for="RequestTypeId" class="form-label">Talep Tipi</label>
+                        <select asp-for="RequestTypeId" class="form-control" asp-items="ViewBag.RequestTypeList"></select>
+                    </div>
 
-                <div class="form-group">
-                    <label asp-for="Description" class="form-label">Açıklama</label>
-                    <textarea class="form-control" asp-for="Description" rows="3"></textarea>
-                </div>
+                    <div class="col-md-12 mb-4">
+                        <label for="formFileMultiple" class="form-label">Yeni Dosya Yükle</label>
+                        <input class="form-control" type="file" id="formFileMultiple" name="newFiles" multiple />
+                    </div>
 
-                <div class="mb-4">
-                    <label asp-for="RequestUnitId" class="control-label">Talep Edilen Birim</label>
-                    <select asp-for="RequestUnitId" class="form-control" asp-items="ViewBag.RequestUnitList">
-                       
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label asp-for="RequestStatusId" class="control-label">Talep Durumu</label>
-                    <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList"></select>
-                </div>
-
-                <div class="mb-4">
-                    <label asp-for="RequestTypeId" class="control-label">Talep Tipi</label>
-                    <select asp-for="RequestTypeId" class="form-control" asp-items="ViewBag.RequestTypeList"></select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="formFileMultiple" class="form-label">Belge Yükle</label>
-                    <input class="form-control" type="file" id="formFileMultiple" name="files" multiple />
-                </div>
-
-                <div class="mb-12 justify-content-center">
-                    <div style="display: flex; justify-content: right; align-items: center; width: 100%;">
-                        <a style="margin-right:10px;" href="@Url.Action("Index")">Listeye Geri Dön</a>
+                    <div class="col-md-12 d-flex justify-content-end">
+                        <a class="btn btn-outline-secondary me-2" href="@Url.Action("Index")">Listeye Geri Dön</a>
                         <input type="submit" value="Güncelle" class="btn btn-dark" />
                     </div>
                 </div>

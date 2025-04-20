@@ -1,0 +1,220 @@
+@model List<AspnetCoreMvcFull.Models.Models.RequestUnit>
+
+@if (Model != null && Model.Any())
+{
+    <!-- Masaüstü görünüm -->
+    <div class="d-none d-md-block">
+        <div class="table-responsive">
+            <table id="unitTable" class="table table-striped table-bordered align-middle w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Birim</th>
+                        <th class="text-center">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var unit in Model)
+                    {
+                        <tr>
+                            <td>@unit.Id</td>
+                            <td>@unit.Unit</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button class="btn btn-sm btn-outline-dark" onclick="openUnitDetailModal(@unit.Id)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="openUnitEditModal(@unit.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteUnit(@unit.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mobil görünüm -->
+    <div class="d-block d-md-none">
+        <div class="row row-cols-1 g-3">
+            @foreach (var unit in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">#@unit.Id</h5>
+                            </div>
+                            <ul class="list-unstyled small mb-2">
+                                <li><strong>Birim:</strong> @unit.Unit</li>
+                            </ul>
+                            <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+                                <button class="btn btn-sm btn-outline-dark" onclick="openUnitDetailModal(@unit.Id)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="openUnitEditModal(@unit.Id)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUnit(@unit.Id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">Hiç birim bulunamadı.</div>
+}
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editUnitForm" method="post">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="updateUserModalLabel" style="color:white;">Birim Güncelle</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="updateUserId" name="Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Birim Adı</label>
+                        <input type="text" class="form-control" name="Unit" id="updateUnitName" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-dark">Güncelle</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const unitTable = $('#unitTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            responsive: true,
+            dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Dışa Aktar',
+                    className: 'btn btn-secondary',
+                    buttons: [
+                        { extend: 'copy', text: 'Kopyala' },
+                        { extend: 'excel', text: 'Excel' },
+                        { extend: 'csv', text: 'CSV' },
+                        { extend: 'pdf', text: 'PDF' },
+                        { extend: 'print', text: 'Yazdır' }
+                    ]
+                }
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+            }
+        });
+    });
+
+    // Detay modalı aç
+    function openUnitDetailModal(id) {
+        $.get('/RequestUnit/GetById/' + id, function (data) {
+            if (data.success) {
+                $('#detailUnitId').text(data.data.id);
+                $('#detailUnitName').text(data.data.unit);
+
+                const modal = new bootstrap.Modal(document.getElementById('unitDetailModal'));
+                modal.show();
+            } else {
+                alert("Birim bilgisi alınamadı.");
+            }
+        });
+    }
+
+    function openUnitEditModal(id) {
+        $.get('/RequestUnit/GetById/' + id, function (data) {
+            if (data.success) {
+                // Verileri modal formuna yerleştir
+                $('#editUnitForm [name="Id"]').val(data.data.id);
+                $('#editUnitForm [name="Unit"]').val(data.data.unit);
+
+                // Modal'ı aç
+                const modal = new bootstrap.Modal(document.getElementById('updateUserModal'));
+                modal.show();
+            } else {
+                alert("Birim bulunamadı.");
+            }
+        });
+    }
+    // Talep Tipi Güncelleme işlemi
+    $('#editUnitForm').off('submit').on('submit', function (e) {
+        e.preventDefault(); // Formun normal şekilde submit olmasını engelliyoruz.
+
+        const formData = $(this).serialize(); // Form verilerini alıyoruz
+        const id = $('#updateUnitId').val(); // Talep tipi ID’sini alıyoruz
+
+        $.ajax({
+            url: '/RequestUnit/Edit',  // AJAX endpoint'ine post yapıyoruz
+            type: 'POST',
+            data: formData,  // Form verilerini gönderiyoruz
+            success: function (res) {
+                if (res.success) {
+                    alert(res.message);  // Başarılı mesajı
+                    location.reload();   // Başarılı olursa sayfayı yeniden yükle
+                } else {
+                    alert("Hata: " + res.message);  // Hata mesajı
+                }
+            },
+            error: function () {
+                alert("Sunucu hatası oluştu.");  // Sunucu hatası
+            }
+        });
+    });
+
+
+    // Sil
+    function deleteUnit(id) {
+        if (!confirm("Bu birimi silmek istiyor musunuz?")) return;
+
+        $.post('/RequestUnit/Delete', { id: id }, function (res) {
+            if (res.success) {
+                alert("Birim silindi.");
+                location.reload();
+            } else {
+                alert("Silme işlemi başarısız.");
+            }
+        });
+    }
+
+    // Yeni ekle modalı (trigger: butonla açılıyor)
+    function openCreateModal() {
+        const modal = new bootstrap.Modal(document.getElementById('createUnitModal'));
+        modal.show();
+    }
+
+    // Yeni ekleme gönder
+    $('#createUnitForm').off('submit').on('submit', function (e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+
+        $.post('/RequestUnit/Create', formData, function (res) {
+            if (res.success) {
+                alert(res.message);
+                location.reload();
+            } else {
+                alert("Hata: " + res.message);
+            }
+        });
+    });
+</script>

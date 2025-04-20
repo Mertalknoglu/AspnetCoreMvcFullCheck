@@ -1,0 +1,95 @@
+@model List<AspnetCoreMvcFull.Models.Models.RequestStatus>
+
+@{
+    ViewData["Title"] = "Talep Durumları";
+    var admin = ViewBag.IsAdmin;
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap bundle (modal için gerekliyse) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<!-- DataTables (sadece jQuery'den sonra gelmeli!) -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Export button destek dosyaları -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<div class="card">
+    <div class="card-header pb-0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Talep Durumu Listesi</h4>
+            <a class="btn btn-dark" href="@Url.Action("Create", "RequestStatus")">Yeni Durum Ekle</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        @Html.Partial("_RequestStatusPartial", Model)
+    </div>
+</div>
+<!-- Durum Detay Modal -->
+<div class="modal fade" id="statusDetailModal" tabindex="-1" aria-labelledby="statusDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="statusDetailModalLabel" style="color:white;">Talep Durumu Detayı</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>ID:</strong> <span id="detailStatusId"></span></li>
+                    <li class="list-group-item"><strong>Durum Adı:</strong> <span id="detailStatusName"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const statusTable = $('#statusTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            responsive: true,
+            dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Dışa Aktar',
+                    className: 'btn btn-secondary',
+                    buttons: [
+                        { extend: 'copy', text: 'Kopyala' },
+                        { extend: 'excel', text: 'Excel' },
+                        { extend: 'csv', text: 'CSV' },
+                        { extend: 'pdf', text: 'PDF' },
+                        { extend: 'print', text: 'Yazdır' }
+                    ]
+                }
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+            }
+        });
+    });
+
+
+
+
+</script>

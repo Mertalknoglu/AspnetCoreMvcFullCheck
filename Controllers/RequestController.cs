@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
-using System.Web;
 using AspnetCoreMvcFull.Models.Models;
 using AspnetCoreMvcFull.Models;
 using Microsoft.AspNetCore.Identity;
@@ -233,58 +232,40 @@ public class RequestController : Controller
     var requester = await _context.Requests.FindAsync(id);
     if (requester == null)
     {
-      return Json(new { success = false, message = "Kayıt bulunamadı!" });
+      return Json(new { success = false, message = "Talep bulunamadı!" });
     }
 
-    try
-    {
-      var user = await _userManager.GetUserAsync(User);
+    var user = await _userManager.GetUserAsync(User);
+    requester.IsDeleted = true;
+    requester.ModifiedAt = DateTime.Now;
+    requester.ModifiedBy = user.Id;
 
-      // ✨ Soft delete
-      requester.IsDeleted = true;
-      requester.ModifiedAt = DateTime.Now;
-      requester.ModifiedBy = user.Id;
+    _context.Update(requester);
+    await _context.SaveChangesAsync();
 
-      _context.Update(requester);
-      await _context.SaveChangesAsync();
-
-      return Json(new { success = true });
-    }
-    catch (Exception ex)
-    {
-      return Json(new { success = false, message = "Bir hata oluştu: " + ex.Message });
-    }
+    return Json(new { success = true });
   }
-  [HttpPost]
-  public async Task<IActionResult> EditAjax(int id, [FromForm] Request requester, [FromForm] IFormFile[] newFiles)
-  {
-    if (id != requester.Id)
-      return Json(new { success = false, message = "Geçersiz ID" });
 
-    var existingRequester = await _context.Requests.FindAsync(id);
-    if (existingRequester == null)
-      return Json(new { success = false, message = "Kayıt bulunamadı" });
+  [HttpPost]
+  public async Task<IActionResult> EditAjax(int id, [FromForm] Request requester, [FromForm] IFormFile[] NewFiles)
+  {
+    var existing = await _context.Requests.FindAsync(id);
+    if (existing == null)
+      return Json(new { success = false, message = "Talep bulunamadı." });
 
     var user = await _userManager.GetUserAsync(User);
 
-    existingRequester.Tckn = requester.Tckn;
-    existingRequester.FirstName = requester.FirstName;
-    existingRequester.Surname = requester.Surname;
-    existingRequester.TelNo = requester.TelNo;
-    existingRequester.Email = requester.Email;
-    existingRequester.Address = requester.Address;
-    existingRequester.Description = requester.Description;
-    existingRequester.RequestStatusId = requester.RequestStatusId;
-    existingRequester.RequestTypeId = requester.RequestTypeId;
-    existingRequester.RequestUnitId = requester.RequestUnitId;
-    existingRequester.ModifiedAt = DateTime.Now;
-    existingRequester.ModifiedBy = user.Id;
+    existing.RequestStatusId = requester.RequestStatusId;
+    existing.RequestTypeId = requester.RequestTypeId;
+    existing.RequestUnitId = requester.RequestUnitId;
+    existing.ModifiedAt = DateTime.Now;
+    existing.ModifiedBy = user.Id;
 
-    if (newFiles != null && newFiles.Length > 0)
+    if (NewFiles != null && NewFiles.Length > 0)
     {
-      foreach (var file in newFiles)
+      foreach (var file in NewFiles)
       {
-        var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+        var uniqueFileName = Guid.NewGuid() + "_" + file.FileName;
         var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", uniqueFileName);
 
         using (var stream = new FileStream(path, FileMode.Create))
@@ -294,15 +275,17 @@ public class RequestController : Controller
 
         _context.RequestFilePaths.Add(new RequestFilePath
         {
-          FilePaths = "/uploads/" + uniqueFileName,
-          RequestDetailsId = existingRequester.Id // 🔥 Buraya dikkat!
+          RequestDetailsId = existing.Id,
+          FilePaths = "/uploads/" + uniqueFileName
         });
       }
     }
 
     await _context.SaveChangesAsync();
+
     return Json(new { success = true });
   }
+
 
 
   public JsonResult GetDetails(int id)
@@ -318,11 +301,15 @@ public class RequestController : Controller
 
     var result = new
     {
+      success = true,
       tckn = requester.Tckn,
       firstName = requester.FirstName,
       surname = requester.Surname,
-      requestType = requester.RequestType.Type,
-      requestStatus = requester.RequestStatus.Status,
+      requestType = requester.RequestType?.Type,
+      requestStatus = requester.RequestStatus?.Status,
+      requestTypeId = requester.RequestTypeId,
+      requestStatusId = requester.RequestStatusId,
+      requestUnitId = requester.RequestUnitId,
       date = requester.Date.ToString("yyyy-MM-dd"),
       description = requester.Description,
       address = requester.Address,
@@ -333,6 +320,7 @@ public class RequestController : Controller
 
     return Json(result);
   }
+
 
 
 
@@ -389,6 +377,64 @@ public class RequestController : Controller
     }
 
     return BadRequest("Dosya bulunamadı");
+  }
+  // Mevcut Index metodunu bozmadan filtreleme için alternatif action:
+  [HttpGet]
+  public async Task<IActionResult> FilteredIndex(string name, string type, string unit, string status)
+  {
+    var user = await _userManager.GetUserAsync(User);
+    ViewBag.IsAdmin = user.IsAdmin;
+
+    IQueryable<Request> query = _context.Requests
+        .Where(r => !r.IsDeleted)
+        .Include(r => r.RequestStatus)
+        .Include(r => r.RequestType)
+        .Include(r => r.RequestUnit);
+
+    // Kullanıcı Admin değilse, birime göre filtrele
+    if (!user.IsAdmin)
+    {
+      query = query.Where(r => r.RequestUnitId == user.UnitId || r.UserId == user.Id);
+    }
+
+    // Filtreleme kriterleri:
+    if (!string.IsNullOrWhiteSpace(name))
+      query = query.Where(r => (r.FirstName + " " + r.Surname).Contains(name));
+
+    if (!string.IsNullOrWhiteSpace(type))
+      query = query.Where(r => r.RequestType.Type.Contains(type));
+
+    if (!string.IsNullOrWhiteSpace(unit))
+      query = query.Where(r => r.RequestUnit.Unit.Contains(unit));
+
+    if (!string.IsNullOrWhiteSpace(status))
+      query = query.Where(r => r.RequestStatus.Status.Contains(status));
+
+    var filteredRequests = await query.ToListAsync();
+
+    // ViewBag verileri mevcut yapı ile uyumlu
+    ViewBag.GelenTalepler = filteredRequests.Where(r => r.RequestUnitId == user.UnitId || user.IsAdmin).ToList();
+    ViewBag.GonderdigimTalepler = filteredRequests.Where(r => r.UserId == user.Id).ToList();
+
+    ViewBag.RequestStatusList = _context.RequestStatuses.Select(x => new SelectListItem
+    {
+      Value = x.Id.ToString(),
+      Text = x.Status
+    }).ToList();
+
+    ViewBag.RequestTypeList = _context.RequestTypes.Select(x => new SelectListItem
+    {
+      Value = x.Id.ToString(),
+      Text = x.Type
+    }).ToList();
+
+    ViewBag.RequestUnitList = _context.RequestUnits.Select(x => new SelectListItem
+    {
+      Value = x.Id.ToString(),
+      Text = x.Unit
+    }).ToList();
+
+    return View("Index"); // Aynı Index.cshtml sayfasına yönlendir
   }
 
   private List<string> ValidateRequester(Request model)

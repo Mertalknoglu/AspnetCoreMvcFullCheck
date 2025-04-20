@@ -27,6 +27,7 @@
 
 @section VendorScripts{ @RenderSection("VendorScripts", required: false) }
 
+
 @section PageScripts{ @RenderSection("PageScripts", required: false) }
 
 @{
@@ -81,3 +82,4 @@
   <!-- Drag Target Area To SlideIn Menu On Small Screens -->
   <div class="drag-target"></div>
 </div>
+@RenderSection("Scripts", required: false)

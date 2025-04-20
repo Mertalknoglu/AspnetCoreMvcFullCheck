@@ -1,0 +1,162 @@
+@model List<AspnetCoreMvcFull.Models.Models.RequestType>
+
+@if (Model != null && Model.Any())
+{
+    <!-- Masaüstü görünüm -->
+    <div class="d-none d-md-block">
+        <div class="table-responsive">
+            <table id="unitTable" class="table table-striped table-bordered align-middle w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Talep Tipi</th>
+                        <th class="text-center">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var type in Model)
+                    {
+                        <tr>
+                            <td>@type.Id</td>
+                            <td>@type.Type</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button class="btn btn-sm btn-outline-dark" onclick="openRequestTypeDetailModal(@type.Id)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="openRequestTypeEditModal(@type.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteRequestType(@type.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mobil görünüm -->
+    <div class="d-block d-md-none">
+        <div class="row row-cols-1 g-3">
+            @foreach (var type in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">#@type.Id</h5>
+                            </div>
+                            <ul class="list-unstyled small mb-2">
+                                <li><strong>Talep Tipi:</strong> @type.Type</li>
+                            </ul>
+                            <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+                                <button class="btn btn-sm btn-outline-dark" onclick="openRequestTypeDetailModal(@type.Id)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="openRequestTypeEditModal(@type.Id)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteRequestType(@type.Id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">Hiç talep tipi bulunamadı.</div>
+}
+<!-- Talep Tipi Güncelleme Modalı -->
+<div class="modal fade" id="editRequestTypeModal" tabindex="-1" aria-labelledby="editRequestTypeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editRequestTypeModalLabel">Talep Tipi Güncelle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted">
+                <form id="editRequestTypeForm" method="post">
+                    <input type="hidden" id="updateRequestTypeId" name="Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Talep Tipi</label>
+                        <input type="text" class="form-control" name="Type" id="updateRequestTypeName" required />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-dark">Güncelle</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  // Talep Tipi Detay Modalı Aç
+function openRequestTypeDetailModal(id) {
+    $.get('/RequestType/GetById/' + id, function (data) {
+        if (data.success) {
+            $('#detailUnitId').text(data.data.id);  // ID
+            $('#detailUnitName').text(data.data.type);  // Talep Tipi
+
+            const modal = new bootstrap.Modal(document.getElementById('unitDetailModal'));
+            modal.show();
+        } else {
+            alert("Talep Tipi bilgisi alınamadı.");
+        }
+    });
+}
+    function openRequestTypeEditModal(id) {
+        $.get('/RequestType/GetById/' + id, function (data) {
+            if (data.success) {
+                $('#updateRequestTypeId').val(data.data.id); // ID
+                $('#updateRequestTypeName').val(data.data.type); // Talep Tipi
+
+                const modal = new bootstrap.Modal(document.getElementById('editRequestTypeModal'));
+                modal.show();
+            } else {
+                alert("Talep Tipi bulunamadı.");
+            }
+        });
+    }
+
+        $('#editRequestTypeForm').off('submit').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = $(this).serialize(); // ID ve Type birlikte alınır
+
+        $.post('/RequestType/CustomEdit', formData, function (res) {
+            if (res.success) {
+                alert(res.message);
+                location.reload(); // Başarılıysa sayfa yenilenir
+            } else {
+                alert("Hata: " + res.message);
+            }
+        });
+    });
+
+    // Talep Tipi Sil
+function deleteRequestType(id) {
+    if (!confirm("Bu talep tipini silmek istiyor musunuz?")) return;
+
+    $.post('/RequestType/Delete', { id: id }, function (res) {
+        if (res.success) {
+            alert("Talep Tipi silindi.");
+            location.reload();  // Sayfayı yeniden yükle
+        } else {
+            alert("Silme işlemi başarısız.");
+        }
+    });
+}
+
+
+</script>

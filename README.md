@@ -1,193 +1,495 @@
-<p align="center">
-   <a href="https://themeselection.com/item/sneat-free-aspnet-core-mvc-admin-template/" target="_blank">
-      <img src="https://cdn.themeselection.com/ts-assets/sneat/logo/logo.png" alt="sneat-logo" width="60px" height="auto">
-   </a>
-</p>
-
-<h1 align="center">
-   <a href="https://themeselection.com/item/sneat-free-aspnet-core-mvc-admin-template/" target="_blank" align="center">
-      Sneat - Free Bootstrap 5 .Net Core MVC Admin Template
-   </a>
-</h1>
-
-<p align="center">Most Powerful & Comprehensive Free Bootstrap 5 .Net Core MVC Admin Dashboard Template built for developers!</p>
-
-![GitHub](https://img.shields.io/github/license/themeselection/sneat-bootstrap-html-aspnet-core-mvc-admin-template-free) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/themeselection/sneat-bootstrap-html-aspnet-core-mvc-admin-template-free) ![GitHub issues](https://img.shields.io/github/issues/themeselection/sneat-bootstrap-html-aspnet-core-mvc-admin-template-free) ![GitHub closed issues](https://img.shields.io/github/issues-closed/themeselection/sneat-bootstrap-html-aspnet-core-mvc-admin-template-free) ![Twitter Follow](https://img.shields.io/twitter/follow/Theme_Selection?style=social)
-
-<kbd>[![Sneat - Free Bootstrap 5 .Net Core MVC Admin Template Demo Screenshot](https://cdn.themeselection.com/ts-assets/sneat/sneat-bootstrap-aspnet-core-mvc-admin-template-free/banner/banner.png)](https://themeselection.com/item/sneat-free-aspnet-core-mvc-admin-template/)</kbd>
-
-## Introduction 🚀
-
-If you’re a developer looking for the most Powerful & comprehensive [**Free Bootstrap 5 ASPNET Core MVC Admin Template**](https://themeselection.com/item/sneat-free-aspnet-core-mvc-admin-template/) built for developers, rich with features, and highly customizable look no further than Sneat. We’ve followed the highest industry standards to bring you the very best admin template that is not only fast and easy to use but highly scalable. Offering ultimate convenience and flexibility, you’ll be able to build whatever application you want with very little hassle.
-
-Build premium quality applications with ease. Use our innovative [Aspnet Core MVC Bootstrap admin template](https://themeselection.com/item/category/asp-net-dashboard/) to create eye-catching, high-quality WebApps. Your apps will be completely responsive, ensuring they’ll look stunning and function flawlessly on desktops, tablets, and mobile devices.
-
-[View Demo](https://demos.themeselection.com/sneat-aspnet-core-mvc-admin-template-free/html/)
-
-## Installation ⚒️
-
-Please [visit](https://demos.themeselection.com/sneat-bootstrap-html-admin-template/documentation/net-core-mvc-init-installation.html) our docs for installation guide.
-
-## What's Included 📦
-
-- Dashboard
-  - Analytics
-- Layouts
-  - Without menu
-  - Without Navbar
-  - Container
-  - Fluid
-  - Blank
-- Pages
-  - Account Settings
-  - Login
-  - Register
-  - Forgot Password
-  - Error
-  - Under Maintenance
-- Cards
-- User Interface
-  - **All Bootstrap Components**
-- Extended UI
-  - Perfect Scrollbar
-  - Text Divider
-- Boxicon
-- Form Elements
-  - Basic Inputs
-  - Input Groups
-- Form Layout
-  - Vertical Form
-  - Horizontal Form
-- Tables
-
-## What's in Premium Version 💎
-
-| Sneat Free Version                                                                       | Sneat Premium Version                                                                                                              |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [Demo](https://demos.themeselection.com/sneat-aspnet-core-mvc-admin-template-free/html/) | [Demo](https://demos.themeselection.com/sneat-aspnet-core-mvc-admin-template/html/vertical-menu-template/)                         |
-| [Download](https://themeselection.com/item/sneat-free-aspnet-core-mvc-admin-template/)   | [Purchase](https://themeselection.com/item/sneat-aspnet-core-mvc-admin-template/)                                                  |
-| Single vertical Menu                                                                     | Vertical Menu + Horizontal Menu                                                                                                    |
-| Simple Light Style                                                                       | Light & Dark Style                                                                                                                 |
-| Default Theme                                                                            | Default, Semi Dark & Bordered Themes                                                                                               |
-| Fixed Layout(Menu)                                                                       | Fixed & Static Layout(Menu)                                                                                                        |
-| 1 Simple Dashboard                                                                       | 5 Niche Dashboards                                                                                                                 |
-| -                                                                                        | Multiple Ready Applications like Calendar, Invoice, Users List, Users View, Roles and Permission,Transactions(CRUD) etc.           |
-| Simple Form Elements                                                                     | Advance form elements, validation & form wizard                                                                                    |
-| Basic Cards                                                                              | Basic, Advance, Statistics, Analytics, Gamification and Actions Cards                                                              |
-| Basic User Interface(Components)                                                         | Advance and Custom User Interfaces(Components)                                                                                     |
-| Two Extended Components                                                                  | Twelve Ready to use Extended Components                                                                                            |
-| -                                                                                        | Quick Search - Quickly navigate between pages (w/ hotkey support)                                                                  |
-| Basic Pages                                                                              | Authentication Pages in 2 Variants + Ready-to-use pages like User Profile, Account Settings, FAQ, Help Center, Pricing, Misc, etc. |
-| -                                                                                        | 3D Characters + Illustrations                                                                                                      |
-| Basic tables                                                                             | Advanced tables                                                                                                                    |
-| -                                                                                        | Quick customization using theme config file                                                                                        |
-| -                                                                                        | Leaflet Maps                                                                                                                       |
-| 1 Chart Library                                                                          | 2 Chart Libraries                                                                                                                  |
-| -                                                                                        | Multiple Navbar & Menu Options                                                                                                     |
-| -                                                                                        | Starter-kit                                                                                                                        |
-| -                                                                                        | Internationalization support                                                                                                       |
-| -                                                                                        | RTL Support                                                                                                                        |
-| Regular Support                                                                          | Priority Support                                                                                                                   |
-| Detailed Documentation                                                                   | Detailed Documentation                                                                                                             |
-
-## Documentation 📜
-
-<!-- If you have docs in wiki then use below line -->
-
-Check GitHub [Wiki](https://github.com/themeselection/sneat-bootstrap-html-aspnet-core-mvc-admin-template-free/wiki) of this repository.
-
-Check out our live [Documentation](https://demos.themeselection.com/sneat-bootstrap-html-admin-template/documentation/net-core-mvc-introduction.html)
-
-## Browser Support 🖥️
-
-![chrome](https://github.com/nuxt/nuxt/assets/47495003/bbb6d7b0-2db6-4af4-abdc-a73de71dd287)
-&nbsp;&nbsp;![firefox](https://github.com/nuxt/nuxt/assets/47495003/bca1f2d0-d597-453b-8525-5c94e36bfc33)
-&nbsp;&nbsp;![safari](https://github.com/nuxt/nuxt/assets/47495003/8ecbb395-78fb-40fb-bb59-7301bf8a7e5d)
-&nbsp;&nbsp;![Microsoft Edge](https://github.com/nuxt/nuxt/assets/47495003/f945821b-0cbd-464d-8103-824d4d5c4e9a)
-
-\*_It also supports other browser which implemented latest CSS standards_
-
-## Contributing 🦸
-
-Contribution are always welcome and recommended! Here is how:
-
-- Fork the repository ([here is the guide](https://docs.github.com/en/get-started/quickstart/fork-a-repo)).
-- Clone to your machine `git clone https://github.com/themeselection/sneat-bootstrap-html-aspnet-core-mvc-admin-template-free` Make your changes
-- Create a pull request
-
-### Contribution Requirements 🧰
-
-- When you contribute, you agree to give a non-exclusive license to ThemeSelection to use that contribution in any context as we (ThemeSelection) see appropriate.
-- If you use content provided by another party, it must be appropriately licensed using an open source license.
-- Contributions are only accepted through Github pull requests.
-- Finally, contributed code must work in all supported browsers (see above for browser support).
-
-## Changelog 📆
-
-Please refer to the [CHANGELOG](CHANGELOG.md) file. We will add a detailed release notes to each new release.
-
-## Support 🧑🏻‍💻
-
-For free products, enjoy community support via GitHub issues. Upgrade to Premium for dedicated support from our expert team.
-
-## License &copy;
-
-- Copyright © [ThemeSelection](https://themeselection.com/)
-- Licensed under [MIT](LICENSE)
-- All our free items are Open Source and licensed under MIT. You can use our free items for personal as well as commercial purposes. We just need an attribution from your end. Copy the below link and paste it at the footer of your web application or project.
-  ```html
-  <a href="https://themeselection.com/">ThemeSelection</a>
-  ```
-
-## Also Available In
-
-<p>
-   <!-- Figma -->
-   <a href="https://themeselection.com/item/sneat-figma-admin-dashboard-builder-ui-kit/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/0318a6c8-4f9b-4cf6-af5e-d357f909ea2b"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/47f21dfe-c1fc-4a7d-859e-4d98f8cdded1"><img width="auto" height="74px" alt="html" src="https://github.com/microsoft/vscode/assets/47495003/47f21dfe-c1fc-4a7d-859e-4d98f8cdded1"></picture></img></a>&nbsp;&nbsp;
-   <!-- HTML -->
-   <a href="https://themeselection.com/item/sneat-bootstrap-html-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/5fe77c46-2e4c-475a-8dec-e30e2badddee"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/3f5decd8-cd99-4ed3-aa76-528ca061385b"><img width="auto" height="74px" alt="html" src="https://github.com/microsoft/vscode/assets/47495003/3f5decd8-cd99-4ed3-aa76-528ca061385b"></picture></img></a>&nbsp;&nbsp;
-   <!-- HTML + Laravel -->
-   <a href="https://themeselection.com/item/sneat-bootstrap-laravel-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/efe420e4-9863-41b7-9eda-47ea94f21a62"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/be3b86e0-4d5e-4736-bf89-4267fb4d6710"><img width="auto" height="74px" alt="html_laravel" src="https://github.com/microsoft/vscode/assets/47495003/be3b86e0-4d5e-4736-bf89-4267fb4d6710"></picture></img></a>&nbsp;&nbsp;
-   <!-- HTML + Django -->
-   <a href="https://themeselection.com/item/sneat-bootstrap-django-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/3c87d33b-1223-4aaa-a652-388dcb714c98"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/51db1947-eac1-466f-87fd-5a209010fe9c"><img width="auto" height="74px" alt="html_django" src="https://github.com/microsoft/vscode/assets/47495003/51db1947-eac1-466f-87fd-5a209010fe9c"></picture></img></a>&nbsp;&nbsp;
-   <!-- .Net Core -->
-   <a href="https://themeselection.com/item/sneat-aspnet-core-mvc-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/6327fd7b-9c54-4189-a852-28551ad0e002"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/9856e9d5-021f-4573-902a-702e80dd0102"><img width="auto" height="74px" alt="net_core" src="https://github.com/microsoft/vscode/assets/47495003/9856e9d5-021f-4573-902a-702e80dd0102"></picture></img></a>&nbsp;&nbsp;
-   <!-- NextJS -->
-   <a href="https://themeselection.com/item/sneat-mui-react-nextjs-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/66344629-6d21-4f92-9078-f479b39cb34e"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/e1daf4e1-3fa5-4a44-969a-6143ddd67310"><img width="auto" height="74px" alt="next.js" src="https://github.com/microsoft/vscode/assets/47495003/e1daf4e1-3fa5-4a44-969a-6143ddd67310"></picture></img></a>&nbsp;&nbsp;
-   <!-- Vue -->
-   <a href="https://themeselection.com/item/sneat-vuetify-vuejs-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/881bbbb8-d1c9-421c-9bce-4ea43dfa9e6e"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/b02d6473-0345-42c2-be58-e648806104fa"><img width="auto" height="74px" alt="vue" src="https://github.com/microsoft/vscode/assets/47495003/b02d6473-0345-42c2-be58-e648806104fa"></picture></img></a>&nbsp;&nbsp;
-   <!-- Vue + Laravel -->
-   <a href="https://themeselection.com/item/sneat-vuetify-vuejs-laravel-admin-template/" target="_blank"><picture><source width="auto" height="74px" media="(prefers-color-scheme: dark)" srcset="https://github.com/microsoft/vscode/assets/47495003/20b6428e-3fa5-4f80-a389-9e4cd732c2de"><source width="auto" height="74px" media="(prefers-color-scheme: light)" srcset="https://github.com/microsoft/vscode/assets/47495003/3008d3eb-7b5b-4d9c-8563-837744a901da"><img width="auto" height="74px" alt="vue_laravel" src="https://github.com/microsoft/vscode/assets/47495003/3008d3eb-7b5b-4d9c-8563-837744a901da"></picture></img></a>&nbsp;&nbsp;
-</p>
-
-<!-- Add other pro variants here. You can get the logo URL from here: https://icones.js.org/collection/logos -->
-
-## Looking For Premium Admin Templates ?? 👀
-
-**[ThemeSelection](https://themeselection.com/)** provides Selected high quality, modern design, professional and easy-to-use **Fully Coded Dashboard Templates & UI Kits** to create your applications faster!
-
-- [Bootstrap Admin Templates](https://themeselection.com/item/category/bootstrap-admin-templates/)
-- [VueJS Admin Templates](https://themeselection.com/item/category/vuejs-admin-templates/)
-- [Laravel Admin Templates](https://themeselection.com/item/category/laravel-admin-templates/)
-- [Django Admin Templates](https://themeselection.com/item/category/django-admin-template/)
-- [React (NextJS) Admin Templates](https://themeselection.com/item/category/next-js-admin-template/)
-- [ASP.Net Core Admin Templates](https://themeselection.com/item/category/asp-net-dashboard/)
-- [Free UI Kits](https://themeselection.com/item/category/free-ui-kits/)
-
-If you want to [Download Free Admin Templates](https://themeselection.com/item/category/free-admin-templates/) like Sneat Aspnet Core MVC Free then do visit [ThemeSelection](https://themeselection.com/).
-
-## Useful Links 🎁
-
-* [Vue CheatSheet](https://vue-cheatsheet.themeselection.com/)
-* [Freebies](https://themeselection.com/item/category/free-admin-templates/)
-* [Download Free Admin Templates](https://themeselection.com/item/category/free-admin-templates/)
-* [Bootstrap 5 CheatSheet](https://bootstrap-cheatsheet.themeselection.com/)
-
-## Social Media :earth_africa:
-
-- [Twitter](https://twitter.com/Theme_Selection)
-- [Facebook](https://www.facebook.com/ThemeSelections/)
-- [Pinterest](https://pinterest.com/themeselect/)
-- [Instagram](https://www.instagram.com/themeselection/)
-- [Discord](https://discord.gg/kBHkY7DekX)
-- [YouTube](https://www.youtube.com/channel/UCuryo5s0CW4aP83itLjIdZg)
+USE [master]
+GO
+/****** Object:  Database [TalepYonetim]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE DATABASE [TalepYonetim]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'TalepYonetim', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\TalepYonetim.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'TalepYonetim_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\TalepYonetim_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [TalepYonetim] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [TalepYonetim].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [TalepYonetim] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET AUTO_CLOSE ON 
+GO
+ALTER DATABASE [TalepYonetim] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [TalepYonetim] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [TalepYonetim] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET  ENABLE_BROKER 
+GO
+ALTER DATABASE [TalepYonetim] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [TalepYonetim] SET READ_COMMITTED_SNAPSHOT ON 
+GO
+ALTER DATABASE [TalepYonetim] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [TalepYonetim] SET  MULTI_USER 
+GO
+ALTER DATABASE [TalepYonetim] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [TalepYonetim] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [TalepYonetim] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [TalepYonetim] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [TalepYonetim] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [TalepYonetim] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [TalepYonetim] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [TalepYonetim] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [TalepYonetim]
+GO
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[__EFMigrationsHistory](
+	[MigrationId] [nvarchar](150) NOT NULL,
+	[ProductVersion] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+(
+	[MigrationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetRoleClaims]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetRoleClaims](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RoleId] [int] NOT NULL,
+	[ClaimType] [nvarchar](max) NULL,
+	[ClaimValue] [nvarchar](max) NULL,
+ CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetRoles]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetRoles](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](256) NULL,
+	[NormalizedName] [nvarchar](256) NULL,
+	[ConcurrencyStamp] [nvarchar](max) NULL,
+ CONSTRAINT [PK_AspNetRoles] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetUserClaims](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ClaimType] [nvarchar](max) NULL,
+	[ClaimValue] [nvarchar](max) NULL,
+ CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetUserLogins]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetUserLogins](
+	[LoginProvider] [nvarchar](450) NOT NULL,
+	[ProviderKey] [nvarchar](450) NOT NULL,
+	[ProviderDisplayName] [nvarchar](max) NULL,
+	[UserId] [int] NOT NULL,
+ CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY CLUSTERED 
+(
+	[LoginProvider] ASC,
+	[ProviderKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetUserRoles]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetUserRoles](
+	[UserId] [int] NOT NULL,
+	[RoleId] [int] NOT NULL,
+ CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY CLUSTERED 
+(
+	[UserId] ASC,
+	[RoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetUsers](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[TcKimlikNo] [nvarchar](11) NOT NULL,
+	[FirstName] [nvarchar](100) NOT NULL,
+	[LastName] [nvarchar](100) NOT NULL,
+	[UnitId] [int] NOT NULL,
+	[IsAdmin] [bit] NOT NULL,
+	[UserName] [nvarchar](256) NULL,
+	[NormalizedUserName] [nvarchar](256) NULL,
+	[Email] [nvarchar](256) NULL,
+	[NormalizedEmail] [nvarchar](256) NULL,
+	[EmailConfirmed] [bit] NOT NULL,
+	[PasswordHash] [nvarchar](max) NULL,
+	[SecurityStamp] [nvarchar](max) NULL,
+	[ConcurrencyStamp] [nvarchar](max) NULL,
+	[PhoneNumber] [nvarchar](max) NULL,
+	[PhoneNumberConfirmed] [bit] NOT NULL,
+	[TwoFactorEnabled] [bit] NOT NULL,
+	[LockoutEnd] [datetimeoffset](7) NULL,
+	[LockoutEnabled] [bit] NOT NULL,
+	[AccessFailedCount] [int] NOT NULL,
+ CONSTRAINT [PK_AspNetUsers] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AspNetUserTokens]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AspNetUserTokens](
+	[UserId] [int] NOT NULL,
+	[LoginProvider] [nvarchar](450) NOT NULL,
+	[Name] [nvarchar](450) NOT NULL,
+	[Value] [nvarchar](max) NULL,
+ CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY CLUSTERED 
+(
+	[UserId] ASC,
+	[LoginProvider] ASC,
+	[Name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RequestFilePaths]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RequestFilePaths](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestDetailsId] [int] NOT NULL,
+	[FilePaths] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_RequestFilePaths] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RequestLogs]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RequestLogs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[Status] [nvarchar](max) NOT NULL,
+	[Type] [nvarchar](max) NOT NULL,
+	[Unit] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[ChangedAt] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_RequestLogs] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Requests]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Requests](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Tckn] [nvarchar](max) NOT NULL,
+	[FirstName] [nvarchar](max) NOT NULL,
+	[Surname] [nvarchar](max) NOT NULL,
+	[TelNo] [nvarchar](max) NOT NULL,
+	[Email] [nvarchar](max) NOT NULL,
+	[Address] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[Date] [datetime2](7) NOT NULL,
+	[RequestStatusId] [int] NOT NULL,
+	[RequestTypeId] [int] NOT NULL,
+	[RequestUnitId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[CreatedBy] [int] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[ModifiedAt] [datetime2](7) NULL,
+	[ModifiedBy] [int] NULL,
+ CONSTRAINT [PK_Requests] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RequestStatuses]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RequestStatuses](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Status] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_RequestStatuses] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RequestTypes]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RequestTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Type] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_RequestTypes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RequestUnits]    Script Date: 20.04.2025 10:31:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RequestUnits](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Unit] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_RequestUnits] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Index [IX_AspNetRoleClaims_RoleId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_AspNetRoleClaims_RoleId] ON [dbo].[AspNetRoleClaims]
+(
+	[RoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [RoleNameIndex]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [dbo].[AspNetRoles]
+(
+	[NormalizedName] ASC
+)
+WHERE ([NormalizedName] IS NOT NULL)
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_AspNetUserClaims_UserId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_AspNetUserClaims_UserId] ON [dbo].[AspNetUserClaims]
+(
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_AspNetUserLogins_UserId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_AspNetUserLogins_UserId] ON [dbo].[AspNetUserLogins]
+(
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_AspNetUserRoles_RoleId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_AspNetUserRoles_RoleId] ON [dbo].[AspNetUserRoles]
+(
+	[RoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [EmailIndex]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [EmailIndex] ON [dbo].[AspNetUsers]
+(
+	[NormalizedEmail] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UserNameIndex]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex] ON [dbo].[AspNetUsers]
+(
+	[NormalizedUserName] ASC
+)
+WHERE ([NormalizedUserName] IS NOT NULL)
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_RequestFilePaths_RequestDetailsId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_RequestFilePaths_RequestDetailsId] ON [dbo].[RequestFilePaths]
+(
+	[RequestDetailsId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Requests_RequestStatusId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_Requests_RequestStatusId] ON [dbo].[Requests]
+(
+	[RequestStatusId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Requests_RequestTypeId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_Requests_RequestTypeId] ON [dbo].[Requests]
+(
+	[RequestTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Requests_RequestUnitId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_Requests_RequestUnitId] ON [dbo].[Requests]
+(
+	[RequestUnitId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Requests_UserId]    Script Date: 20.04.2025 10:31:38 ******/
+CREATE NONCLUSTERED INDEX [IX_Requests_UserId] ON [dbo].[Requests]
+(
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[RequestFilePaths] ADD  DEFAULT (N'') FOR [FilePaths]
+GO
+ALTER TABLE [dbo].[Requests] ADD  DEFAULT ('0001-01-01T00:00:00.0000000') FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[Requests] ADD  DEFAULT ((0)) FOR [CreatedBy]
+GO
+ALTER TABLE [dbo].[Requests] ADD  DEFAULT (CONVERT([bit],(0))) FOR [IsDeleted]
+GO
+ALTER TABLE [dbo].[AspNetRoleClaims]  WITH CHECK ADD  CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[AspNetRoles] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[AspNetRoleClaims] CHECK CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId]
+GO
+ALTER TABLE [dbo].[AspNetUserClaims]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[AspNetUsers] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[AspNetUserClaims] CHECK CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId]
+GO
+ALTER TABLE [dbo].[AspNetUserLogins]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[AspNetUsers] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[AspNetUserLogins] CHECK CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId]
+GO
+ALTER TABLE [dbo].[AspNetUserRoles]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[AspNetRoles] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[AspNetUserRoles] CHECK CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId]
+GO
+ALTER TABLE [dbo].[AspNetUserRoles]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[AspNetUsers] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[AspNetUserRoles] CHECK CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId]
+GO
+ALTER TABLE [dbo].[AspNetUserTokens]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[AspNetUsers] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[AspNetUserTokens] CHECK CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId]
+GO
+ALTER TABLE [dbo].[RequestFilePaths]  WITH CHECK ADD  CONSTRAINT [FK_RequestFilePaths_Requests_RequestDetailsId] FOREIGN KEY([RequestDetailsId])
+REFERENCES [dbo].[Requests] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[RequestFilePaths] CHECK CONSTRAINT [FK_RequestFilePaths_Requests_RequestDetailsId]
+GO
+ALTER TABLE [dbo].[Requests]  WITH CHECK ADD  CONSTRAINT [FK_Requests_AspNetUsers_UserId] FOREIGN KEY([UserId])
+REFERENCES [dbo].[AspNetUsers] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Requests] CHECK CONSTRAINT [FK_Requests_AspNetUsers_UserId]
+GO
+ALTER TABLE [dbo].[Requests]  WITH CHECK ADD  CONSTRAINT [FK_Requests_RequestStatuses_RequestStatusId] FOREIGN KEY([RequestStatusId])
+REFERENCES [dbo].[RequestStatuses] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Requests] CHECK CONSTRAINT [FK_Requests_RequestStatuses_RequestStatusId]
+GO
+ALTER TABLE [dbo].[Requests]  WITH CHECK ADD  CONSTRAINT [FK_Requests_RequestTypes_RequestTypeId] FOREIGN KEY([RequestTypeId])
+REFERENCES [dbo].[RequestTypes] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Requests] CHECK CONSTRAINT [FK_Requests_RequestTypes_RequestTypeId]
+GO
+ALTER TABLE [dbo].[Requests]  WITH CHECK ADD  CONSTRAINT [FK_Requests_RequestUnits_RequestUnitId] FOREIGN KEY([RequestUnitId])
+REFERENCES [dbo].[RequestUnits] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Requests] CHECK CONSTRAINT [FK_Requests_RequestUnits_RequestUnitId]
+GO
+USE [master]
+GO
+ALTER DATABASE [TalepYonetim] SET  READ_WRITE 
+GO

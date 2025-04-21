@@ -26,6 +26,8 @@ namespace AspnetCoreMvcFull.Models
     [ForeignKey("UnitId")]
     public virtual RequestUnit? Unit { get; set; }
     public bool IsAdmin { get; set; }
+    public string? ProfilePicture { get; set; }
+
   }
 
 }

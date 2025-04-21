@@ -25,10 +25,10 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // Yetkilendirme ve kimlik doğrulama ayarları
 builder.Services.ConfigureApplicationCookie(options =>
 {
-  options.LoginPath = "/Auth/Login"; // Kullanıcı giriş yapmadığında yönlendirilecek sayfa
-  options.AccessDeniedPath = "/Auth/AccessDenied"; // Yetkisiz erişim yönlendirme
+  options.LoginPath = "/Account/Login"; // Kullanıcı giriş yapmadığında yönlendirilecek sayfa
+  options.AccessDeniedPath = "/Error/500"; // Yetkisiz erişim yönlendirme
 });
-
+builder.Services.AddSession();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -44,7 +44,7 @@ if (!app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();

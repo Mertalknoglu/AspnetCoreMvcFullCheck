@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AspnetCoreMvcFull.Models.ViewModel;
+using AspnetCoreMvcFull.Filters;
 
 namespace AspnetCoreMvcFull.Controllers
 {
+  [AdminOnly]
   public class UserController : Controller
   {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -79,28 +81,55 @@ namespace AspnetCoreMvcFull.Controllers
       return Json(new { success = result.Succeeded });
     }
     [HttpPost]
-    public async Task<IActionResult> EditAjax(int id, [FromForm] ApplicationUser model)
+    public async Task<IActionResult> EditAjax(int id, [FromForm] UpdateUserViewModel model)
     {
-      var user = await _userManager.FindByIdAsync(id.ToString());
-      if (user == null)
-        return Json(new { success = false, message = "Kullanıcı bulunamadı." });
-
-      user.FirstName = model.FirstName;
-      user.LastName = model.LastName;
-      user.Email = model.Email;
-      user.UserName = model.Email;
-      user.PhoneNumber = model.PhoneNumber;
-      user.UnitId = model.UnitId;
-      user.IsAdmin = model.IsAdmin;
-
-      var result = await _userManager.UpdateAsync(user);
-
-      return Json(new
+      try
       {
-        success = result.Succeeded,
-        message = result.Succeeded ? "Kullanıcı başarıyla güncellendi." : "Güncelleme başarısız oldu."
-      });
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user == null)
+          return Json(new { success = false, message = "Kullanıcı bulunamadı." });
+
+        // Şifre değişikliği
+        if (!string.IsNullOrWhiteSpace(model.NewPassword))
+        {
+          if (model.NewPassword != model.ConfirmPassword)
+            return Json(new { success = false, message = "Şifreler uyuşmuyor." });
+
+          var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+          var passwordResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+          if (!passwordResult.Succeeded)
+          {
+            var errorList = string.Join(", ", passwordResult.Errors.Select(e => e.Description));
+            return Json(new { success = false, message = $"Şifre güncellenemedi: {errorList}" });
+          }
+        }
+
+        // Diğer alanlar
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.Email = model.Email;
+        user.UserName = model.Email;
+        user.PhoneNumber = model.PhoneNumber;
+        user.TcKimlikNo = model.TcKimlikNo;
+        user.UnitId = model.UnitId;
+        user.IsAdmin = model.IsAdmin;
+
+        var result = await _userManager.UpdateAsync(user);
+
+        return Json(new
+        {
+          success = result.Succeeded,
+          message = result.Succeeded ? "Kullanıcı başarıyla güncellendi." : "Güncelleme başarısız."
+        });
+      }
+      catch (Exception ex)
+      {
+        return Json(new { success = false, message = $"Sunucu hatası: {ex.Message}" });
+      }
     }
+
+
+
 
 
     [HttpPost]
@@ -187,9 +216,11 @@ namespace AspnetCoreMvcFull.Controllers
         lastName = user.LastName,
         email = user.Email,
         phoneNumber = user.PhoneNumber,
-        unit = user.Unit?.Unit ?? "Tanımsız", // Birim
+        tcKimlikNo = user.TcKimlikNo,
+        unit = user.Unit?.Unit ?? "Tanımsız", // ✅ burası
         isAdmin = user.IsAdmin
       });
+
     }
 
 

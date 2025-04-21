@@ -11,6 +11,8 @@ namespace AspnetCoreMvcFull.Models.Models
     public string PhoneNumber { get; set; }
     public string UnitName { get; set; }
     public bool IsAdmin { get; set; }
+    public string? ProfilePicture { get; set; }
+    public IFormFile? UploadedPhoto { get; set; }
 
     public string Yetki => IsAdmin ? "Admin" : "Kullanıcı";
 

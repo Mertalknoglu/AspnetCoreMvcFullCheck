@@ -18,7 +18,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
-
+    modelBuilder.Entity<ApplicationUser>()
+      .HasOne(u => u.Unit)
+      .WithMany()
+      .HasForeignKey(u => u.UnitId)
+      .OnDelete(DeleteBehavior.Restrict);
     // Relationship Configuration
     modelBuilder.Entity<Request>()
         .HasOne(r => r.RequestStatus)

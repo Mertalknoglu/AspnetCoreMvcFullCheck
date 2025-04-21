@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
 using System.Net;
 using AspnetCoreMvcFull.Models.Models;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AspnetCoreMvcFull.Controllers
 {
@@ -19,21 +18,6 @@ namespace AspnetCoreMvcFull.Controllers
       _signInManager = signInManager;
       _userManager = userManager;
     }
-    public override void OnActionExecuting(ActionExecutingContext context)
-    {
-      base.OnActionExecuting(context);
-
-      if (User.Identity.IsAuthenticated)
-      {
-        var user = _userManager.GetUserAsync(User).Result;
-        ViewBag.FirstName = user?.FirstName;
-        ViewBag.LastName = user?.LastName;
-        ViewBag.IsAdmin = user?.IsAdmin == true;
-
-        ViewBag.Unit = user?.Unit?.Unit ?? "Tanımsız";
-      }
-    }
-
     #region Login
     [HttpGet]
     public IActionResult Login()
@@ -56,6 +40,11 @@ namespace AspnetCoreMvcFull.Controllers
         ModelState.AddModelError("", "Kullanıcı bulunamadı.");
         return View(model);
       }
+      var userUnit = await _userManager.Users
+     .Include(u => u.Unit)
+     .FirstOrDefaultAsync(u => u.TcKimlikNo == model.TcKimlikNo);
+
+
 
       // Kullanıcıyı giriş yap
       var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
@@ -63,6 +52,11 @@ namespace AspnetCoreMvcFull.Controllers
       {
         TempData["UserName"] = user.FirstName;
         TempData["SurName"] = user.LastName;
+        HttpContext.Session.SetString("UserFullName", user.FirstName + " " + user.LastName);
+        HttpContext.Session.SetInt32("UserId", user.Id);
+        HttpContext.Session.SetInt32("IsAdmin", user.IsAdmin ? 1 : 0);
+        HttpContext.Session.SetString("UnitName", userUnit?.Unit?.Unit ?? "Tanımsız");
+        HttpContext.Session.SetString("ProfilePicture", user.ProfilePicture ?? "1.png");
 
         return RedirectToAction("Index", "Request");
       }
@@ -76,12 +70,17 @@ namespace AspnetCoreMvcFull.Controllers
     [HttpGet]
     public IActionResult Register()
     {
+      if (!User.Identity.IsAuthenticated)
+      {
+        return RedirectToAction("Index", "Login");
+      }
       return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
+
       if (ModelState.IsValid)
       {
         // Yeni kullanıcıyı oluştur
@@ -127,8 +126,6 @@ namespace AspnetCoreMvcFull.Controllers
         return RedirectToAction("Login", "Account");
       }
 
-      ViewBag.FirstName = user.FirstName;
-      ViewBag.LastName = user.LastName;
       return View();
     }
     #region Logout
@@ -137,7 +134,7 @@ namespace AspnetCoreMvcFull.Controllers
     {
       // Kullanıcıyı çıkış yap
       await _signInManager.SignOutAsync();
-
+      HttpContext.Session.Clear();
       // Çıkış işlemi sonrası Login sayfasına yönlendir
       return RedirectToAction("Login", "Account");
     }
@@ -245,14 +242,7 @@ namespace AspnetCoreMvcFull.Controllers
       var user = await _userManager.GetUserAsync(User);
 
       if (user == null)
-      {
-        // Bu durumda zaten login olmamışsın demektir, direkt login'e yönlendir
         return RedirectToAction("Login", "Account");
-      }
-
-      var fullUser = await _userManager.Users
-          .Include(u => u.Unit)
-          .FirstOrDefaultAsync(u => u.Id == user.Id);
 
       var model = new ProfileViewModel
       {
@@ -260,12 +250,15 @@ namespace AspnetCoreMvcFull.Controllers
         LastName = user.LastName,
         Email = user.Email,
         PhoneNumber = user.PhoneNumber,
-        IsAdmin = user.IsAdmin,
-        UnitName = user.Unit?.Unit ?? "Tanımsız"
+        UnitName = user.Unit?.Unit ?? "Tanımsız",
+        IsAdmin = user.IsAdmin ? true : false,
+        ProfilePicture = user.ProfilePicture
       };
 
       return View(model);
     }
+
+
 
     [HttpPost]
     public async Task<IActionResult> UpdateProfile(ProfileViewModel model)
@@ -275,16 +268,39 @@ namespace AspnetCoreMvcFull.Controllers
       if (user == null)
         return RedirectToAction("Login", "Account");
 
-      // Bilgileri güncelle
+      // PROFİL RESMİ YÜKLEME
+      if (model.UploadedPhoto != null && model.UploadedPhoto.Length > 0)
+      {
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var ext = Path.GetExtension(model.UploadedPhoto.FileName).ToLowerInvariant();
+
+        if (allowedExtensions.Contains(ext) && model.UploadedPhoto.Length <= 800 * 1024)
+        {
+          var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+          if (!Directory.Exists(uploadsPath))
+            Directory.CreateDirectory(uploadsPath);
+
+          var fileName = $"{user.ProfilePicture}";
+          var fullPath = Path.Combine(uploadsPath, fileName);
+
+          using (var stream = new FileStream(fullPath, FileMode.Create))
+          {
+            await model.UploadedPhoto.CopyToAsync(stream);
+          }
+
+          user.ProfilePicture = fileName;
+        }
+      }
+
+      // DİĞER ALANLAR
       user.FirstName = model.FirstName;
       user.LastName = model.LastName;
       user.PhoneNumber = model.PhoneNumber;
 
-      // Eğer e-mail farklıysa güncelle (şifre sıfırlamayı tetiklemeden)
       if (user.Email != model.Email)
       {
         user.Email = model.Email;
-        user.UserName = model.Email; // Eğer username olarak email kullanılıyorsa
+        user.UserName = model.Email;
         user.NormalizedEmail = model.Email.ToUpper();
         user.NormalizedUserName = model.Email.ToUpper();
       }
@@ -293,11 +309,11 @@ namespace AspnetCoreMvcFull.Controllers
 
       if (result.Succeeded)
       {
-        TempData["SuccessMessage"] = "Profil bilgileri başarıyla güncellendi.";
+        TempData["SuccessMessage"] = "Profil bilgileri güncellendi.";
         return RedirectToAction("Profile");
       }
 
-      ModelState.AddModelError(string.Empty, "Profil güncellenemedi.");
+      ModelState.AddModelError(string.Empty, "Güncelleme başarısız.");
       return View("Profile", model);
     }
 

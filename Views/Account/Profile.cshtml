@@ -2,10 +2,8 @@
 
 @{
     ViewData["Title"] = "Profil Ayarları";
-    var message = TempData["SuccessMessage"];
-    TempData.Remove("SuccessMessage"); // 👈 burada siliyoruz, garanti oluyor
+    var profilePicPath = Url.Content("~/img/avatars/" + (string.IsNullOrEmpty(Model.ProfilePicture) ? "1.png" : Model.ProfilePicture));
 }
-
 
 @section PageScripts {
     <script src="~/js/pages-account-settings-account.js"></script>
@@ -13,15 +11,23 @@
 
 <div class="row">
     <div class="col-md-12">
-        <!-- Profil Bilgileri -->
-        <div class="card mb-4">
-            <h5 class="card-header">Profil Bilgileri</h5>
-            <div class="card-body">
-               
 
+        <form asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
+            <div class="card mb-4">
+                <h5 class="card-header">Profil Bilgileri</h5>
+                <div class="card-body">
+                    <div class="d-flex align-items-start align-items-sm-center gap-4 pb-4 border-bottom">
+                        <img id="profilePreview" src="@profilePicPath" class="rounded-circle" width="120" height="120" alt="Profil Resmi" />
 
-
-                <form asp-action="UpdateProfile" method="post">
+                        <div class="button-wrapper">
+                            <label for="upload" class="btn btn-primary me-3 mb-4">
+                                <span class="d-none d-sm-block">Upload new photo</span>
+                                <i class="bx bx-upload d-block d-sm-none"></i>
+                                <input type="file" id="upload" name="UploadedPhoto" hidden accept="image/*" onchange="previewImage(event)" />
+                            </label>
+                        </div>
+                    </div>
+                    <br></br>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label asp-for="FirstName" class="form-label">İsim</label>
@@ -53,9 +59,9 @@
                         <button type="submit" class="btn btn-primary me-2">Bilgileri Güncelle</button>
                         <button type="reset" class="btn btn-outline-secondary">Vazgeç</button>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
 
         <!-- Şifre Değiştir -->
         <div class="card" id="passwordSection">
@@ -86,3 +92,19 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('profilePreview').src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function resetImage() {
+            document.getElementById('profilePreview').src = "/img/avatars/1.png";
+            document.getElementById('upload').value = "";
+        }
+    </script>
+}

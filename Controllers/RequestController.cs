@@ -171,7 +171,25 @@ public class RequestController : Controller
 
     var user = await _userManager.GetUserAsync(User);
     var userId = user.Id;
+    var fullName = $"{user.FirstName} {user.LastName}";
 
+    // LOG: Durum
+    var oldStatus = await _context.RequestStatuses.FindAsync(existingRequester.RequestStatusId);
+    var newStatus = await _context.RequestStatuses.FindAsync(requester.RequestStatusId);
+    await LogIfChanged(existingRequester.Id, "Durum Güncellendi", oldStatus?.Status, newStatus?.Status, fullName);
+    existingRequester.RequestStatusId = requester.RequestStatusId;
+
+    // LOG: Tip
+    var oldType = await _context.RequestTypes.FindAsync(existingRequester.RequestTypeId);
+    var newType = await _context.RequestTypes.FindAsync(requester.RequestTypeId);
+    await LogIfChanged(existingRequester.Id, "Tip Güncellendi", oldType?.Type, newType?.Type, fullName);
+    existingRequester.RequestTypeId = requester.RequestTypeId;
+
+    // LOG: Birim
+    var oldUnit = await _context.RequestUnits.FindAsync(existingRequester.RequestUnitId);
+    var newUnit = await _context.RequestUnits.FindAsync(requester.RequestUnitId);
+    await LogIfChanged(existingRequester.Id, "Birim Güncellendi", oldUnit?.Unit, newUnit?.Unit, fullName);
+    existingRequester.RequestUnitId = requester.RequestUnitId;
     // Güncellenebilir alanlar
     existingRequester.Tckn = requester.Tckn;
     existingRequester.FirstName = requester.FirstName;
@@ -207,7 +225,6 @@ public class RequestController : Controller
         });
       }
     }
-
 
     await _context.SaveChangesAsync();
 
@@ -254,9 +271,24 @@ public class RequestController : Controller
       return Json(new { success = false, message = "Talep bulunamadı." });
 
     var user = await _userManager.GetUserAsync(User);
+    var fullName = $"{user.FirstName} {user.LastName}";
 
+    // Durum logla ve güncelle
+    var oldStatus = await _context.RequestStatuses.FindAsync(existing.RequestStatusId);
+    var newStatus = await _context.RequestStatuses.FindAsync(requester.RequestStatusId);
+    await LogIfChanged(existing.Id, "Durum Güncellendi", oldStatus?.Status, newStatus?.Status, fullName);
     existing.RequestStatusId = requester.RequestStatusId;
+
+    // Tip logla ve güncelle
+    var oldType = await _context.RequestTypes.FindAsync(existing.RequestTypeId);
+    var newType = await _context.RequestTypes.FindAsync(requester.RequestTypeId);
+    await LogIfChanged(existing.Id, "Tip Güncellendi", oldType?.Type, newType?.Type, fullName);
     existing.RequestTypeId = requester.RequestTypeId;
+
+    // Birim logla ve güncelle
+    var oldUnit = await _context.RequestUnits.FindAsync(existing.RequestUnitId);
+    var newUnit = await _context.RequestUnits.FindAsync(requester.RequestUnitId);
+    await LogIfChanged(existing.Id, "Birim Güncellendi", oldUnit?.Unit, newUnit?.Unit, fullName);
     existing.RequestUnitId = requester.RequestUnitId;
     existing.ModifiedAt = DateTime.Now;
     existing.ModifiedBy = user.Id;
@@ -290,6 +322,17 @@ public class RequestController : Controller
 
   public JsonResult GetDetails(int id)
   {
+    var logs = _context.RequestLogs
+     .Where(l => l.RequestId == id)
+     .OrderByDescending(l => l.ChangedAt)
+     .Select(l => new
+     {
+       l.ActionType,
+       l.Description,
+       l.ChangedBy,
+       Date = l.ChangedAt.ToString("dd.MM.yyyy HH:mm")
+     }).ToList();
+
     var requester = _context.Requests
         .Include(r => r.RequestType)
         .Include(r => r.RequestStatus)
@@ -307,18 +350,14 @@ public class RequestController : Controller
       surname = requester.Surname,
       requestType = requester.RequestType?.Type,
       requestStatus = requester.RequestStatus?.Status,
-      requestTypeId = requester.RequestTypeId,
-      requestStatusId = requester.RequestStatusId,
-      requestUnitId = requester.RequestUnitId,
       date = requester.Date.ToString("yyyy-MM-dd"),
       description = requester.Description,
-      address = requester.Address,
-      email = requester.Email,
-      telNo = requester.TelNo,
-      files = requester.RequestFilePaths.Select(f => f.FilePaths).ToList()
+      files = requester.RequestFilePaths.Select(f => f.FilePaths).ToList(),
+      logs = logs
     };
 
     return Json(result);
+
   }
 
 
@@ -333,11 +372,25 @@ public class RequestController : Controller
     {
       return Json(new { success = false, message = "Talep bulunamadı." });
     }
-
     var user = await _userManager.GetUserAsync(User);
+    var fullName = $"{user.FirstName} {user.LastName}";
 
+    // Durum
+    var oldStatus = await _context.RequestStatuses.FindAsync(requester.RequestStatusId);
+    var newStatus = await _context.RequestStatuses.FindAsync(RequestStatusId);
+    await LogIfChanged(requester.Id, "Durum Güncellendi", oldStatus?.Status, newStatus?.Status, fullName);
     requester.RequestStatusId = RequestStatusId;
+
+    // Tip
+    var oldType = await _context.RequestTypes.FindAsync(requester.RequestTypeId);
+    var newType = await _context.RequestTypes.FindAsync(RequestTypeId);
+    await LogIfChanged(requester.Id, "Tip Güncellendi", oldType?.Type, newType?.Type, fullName);
     requester.RequestTypeId = RequestTypeId;
+
+    // Birim
+    var oldUnit = await _context.RequestUnits.FindAsync(requester.RequestUnitId);
+    var newUnit = await _context.RequestUnits.FindAsync(RequestUnitId);
+    await LogIfChanged(requester.Id, "Birim Güncellendi", oldUnit?.Unit, newUnit?.Unit, fullName);
     requester.RequestUnitId = RequestUnitId;
     requester.ModifiedAt = DateTime.Now;
     requester.ModifiedBy = user.Id;
@@ -486,6 +539,30 @@ public class RequestController : Controller
     }
 
     return errors;
+  }
+  private async Task LogIfChanged<T>(
+    int requestId,
+    string actionType,
+    T oldValue,
+    T newValue,
+    string changedBy,
+    string? displayOld = null,
+    string? displayNew = null)
+  {
+    if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
+    {
+      string oldVal = displayOld ?? oldValue?.ToString() ?? "";
+      string newVal = displayNew ?? newValue?.ToString() ?? "";
+
+      _context.RequestLogs.Add(new RequestLog
+      {
+        RequestId = requestId,
+        ActionType = actionType,
+        Description = $"{oldVal} → {newVal}",
+        ChangedBy = changedBy,
+        ChangedAt = DateTime.Now
+      });
+    }
   }
 
 }

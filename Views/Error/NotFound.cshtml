@@ -1,7 +1,21 @@
 @{
-    ViewData["Title"] = "Bir Hata Oluştu";
-    Layout = null;
+    Layout = "_BlankLayout";
+    ViewData["Title"] = "Error - Pages";
 }
-<h2>500 - Sunucu Hatası</h2>
-<p>Bir sorun oluştu, lütfen daha sonra tekrar deneyin.</p>
-<a href="/">Ana Sayfaya Dön</a>
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-misc.css">
+}
+
+@* ************** Content ************** *@
+<!-- Error -->
+<div class="container-xxl container-p-y">
+    <div class="misc-wrapper">
+        <h1 class="mb-2 mx-2 text-white" style="line-height: 6rem;font-size: 6rem;">404</h1>
+        <h4 class="mb-2 mx-2 text-white">Sayfa Bulunamadı ⚠️</h4>
+        <p class="mb-6 mx-2 text-white">Aradığınız sayfayı bulamadık</p>
+        <a href="/" class="btn btn-primary">Anasayfaya Geri dön</a>
+        
+    </div>
+</div>
+<!-- /Error -->

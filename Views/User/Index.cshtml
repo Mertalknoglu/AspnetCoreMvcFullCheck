@@ -40,26 +40,46 @@
         @Html.Partial("_UserPartial", Model)
     </div>
 </div>
-
-<!-- Kullanıcı Detay Modal -->
 <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="userDetailModalLabel" style="color:white;">Kullanıcı Detayları</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body text-muted">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Ad Soyad:</strong> <span id="detailName"></span></li>
-                    <li class="list-group-item"><strong>Email:</strong> <span id="detailEmail"></span></li>
-                    <li class="list-group-item"><strong>Telefon:</strong> <span id="detailPhone"></span></li>
-                    <li class="list-group-item"><strong>Birim:</strong> <span id="detailUnit"></span></li>
-                    <li class="list-group-item"><strong>Rol:</strong> <span id="detailRole"></span></li>
-                </ul>
+
+            <div class="modal-body">
+                <div class="container text-muted">
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-bold text-dark">T.C Kimlik No:</div>
+                        <div class="col-7" id="detailTc"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-bold text-dark">Ad Soyad:</div>
+                        <div class="col-7" id="detailName"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-bold text-dark">Email:</div>
+                        <div class="col-7" id="detailEmail"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-bold text-dark">Telefon:</div>
+                        <div class="col-7" id="detailPhone"></div>
+                    </div>
+                    <div class="row py-2 border-bottom">
+                        <div class="col-5 fw-bold text-dark">Birim:</div>
+                        <div class="col-7" id="detailUnit"></div>
+                    </div>
+                    <div class="row py-2">
+                        <div class="col-5 fw-bold text-dark">Rol:</div>
+                        <div class="col-7" id="detailRole"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
             </div>
         </div>
     </div>
 </div>
-
-

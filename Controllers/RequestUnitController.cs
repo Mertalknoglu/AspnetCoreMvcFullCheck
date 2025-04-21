@@ -1,3 +1,4 @@
+using AspnetCoreMvcFull.Filters;
 using AspnetCoreMvcFull.Models.Models;
 using AspnetCoreMvcFull.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspnetCoreMvcFull.Controllers
 {
+  [AdminOnly]
   public class RequestUnitController : Controller
   {
     private readonly ApplicationDbContext _context;

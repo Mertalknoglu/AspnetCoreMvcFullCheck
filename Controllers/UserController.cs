@@ -200,13 +200,11 @@ namespace AspnetCoreMvcFull.Controllers
           }).ToList();
     }
     [HttpGet]
-    public async Task<IActionResult> GetUser(int id)
+    public IActionResult GetUser(int id)
     {
-      var user = await _context.Users.Include(u => u.Unit)
-          .FirstOrDefaultAsync(u => u.Id == id);
-
+      var user = _context.Users.Include(x => x.Unit).FirstOrDefault(x => x.Id == id);
       if (user == null)
-        return Json(new { success = false, message = "Kullanıcı bulunamadı." });
+        return Json(new { success = false });
 
       return Json(new
       {
@@ -217,12 +215,9 @@ namespace AspnetCoreMvcFull.Controllers
         email = user.Email,
         phoneNumber = user.PhoneNumber,
         tcKimlikNo = user.TcKimlikNo,
-        unit = user.Unit?.Unit ?? "Tanımsız", // ✅ burası
+        unitId = user.UnitId,
         isAdmin = user.IsAdmin
       });
-
     }
-
-
   }
 }

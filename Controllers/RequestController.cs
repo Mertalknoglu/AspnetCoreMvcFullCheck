@@ -253,6 +253,13 @@ public class RequestController : Controller
     }
 
     var user = await _userManager.GetUserAsync(User);
+
+    // ❌ Eğer talebi oluşturan kullanıcıysa silmeye izin verme
+    if (requester.UserId == user.Id)
+    {
+      return Json(new { success = false, message = "Kendi oluşturduğunuz talebi silemezsiniz." });
+    }
+
     requester.IsDeleted = true;
     requester.ModifiedAt = DateTime.Now;
     requester.ModifiedBy = user.Id;
@@ -262,6 +269,7 @@ public class RequestController : Controller
 
     return Json(new { success = true });
   }
+
 
   [HttpPost]
   public async Task<IActionResult> EditAjax(int id, [FromForm] Request requester, [FromForm] IFormFile[] NewFiles)

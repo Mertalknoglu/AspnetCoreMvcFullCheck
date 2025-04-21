@@ -46,20 +46,30 @@
                                         <a class="btn btn-sm btn-outline-primary" title="Güncelle" href="@Url.Action("Edit", new { id = item.Id })">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                        <button class="btn btn-sm btn-outline-primary" title="Düzenle" onclick="openUpdateModal(@item.Id)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                        <span class="badge bg-success px-3 py-2">KAPANDI</span>
                                     }
 
-                                    <button class="btn btn-sm btn-outline-primary" title="Düzenle" onclick="openUpdateModal(@item.Id)">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-
-                                    @if (!isGelen)
+                                    @if (!ViewBag.IsAdmin && item.RequestStatus?.Status != "Tamamlandı")
                                     {
-                                                 <button class="btn btn-sm btn-outline-danger" onclick=" deleteRequest(@item.Id)">
-                                                <i class="bi bi-trash"></i>
-                                              </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(@item.Id)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    }
+
+                                    @if (!ViewBag.IsAdmin && item.RequestStatus?.Status == "Tamamlandı")
+                                    {
+                                        <span class="badge bg-success px-3 py-2">KAPANDI</span>
                                     }
                                 </div>
                             </td>
+
+
+
+
                         </tr>
                     }
                 </tbody>
@@ -91,20 +101,31 @@
                                 <button class="btn btn-sm btn-outline-dark" onclick="showDetails(@item.Id)">
                                     <i class="bi bi-eye"></i>
                                 </button>
+
                                 @if (ViewBag.IsAdmin == true)
                                 {
                                     <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", new { id = item.Id })">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal(@item.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <span class="badge bg-success w-100 text-center">KAPANDI</span>
                                 }
-                                <button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal(@item.Id)">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                @if (!isGelen)
-                                {                                    
-                                  <button class="btn btn-sm btn-outline-danger" onclick=" deleteRequest(@item.Id)">
-                                    <i class="bi bi-trash"></i>
-                                  </button>
+
+                                @if (!ViewBag.IsAdmin && item.RequestStatus?.Status != "Tamamlandı")
+                                {
+                                    <button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal(@item.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(@item.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                }
+
+                                @if (!ViewBag.IsAdmin && item.RequestStatus?.Status == "Tamamlandı")
+                                {
+                                    <span class="badge bg-success w-100 text-center">KAPANDI</span>
                                 }
                             </div>
                         </div>
@@ -305,9 +326,16 @@ else
             }
 
             // dropdownları güncelle
-            $('#RequestTypeId').val(data.requestTypeId);
-            $('#RequestUnitId').val(data.requestUnitId);
-            $('#RequestStatusId').val(data.requestStatusId);
+                // Dropdown değerlerini önce sıfırla
+    $('#RequestTypeId option').prop('selected', false);
+    $('#RequestUnitId option').prop('selected', false);
+    $('#RequestStatusId option').prop('selected', false);
+
+    // Sonra doğru olanı seç
+    $(`#RequestTypeId option[value="${data.requestTypeId}"]`).prop('selected', true);
+    $(`#RequestUnitId option[value="${data.requestUnitId}"]`).prop('selected', true);
+    $(`#RequestStatusId option[value="${data.requestStatusId}"]`).prop('selected', true);
+
 
             const updateModal = new bootstrap.Modal(document.getElementById('updateRequestModal'));
             updateModal.show();

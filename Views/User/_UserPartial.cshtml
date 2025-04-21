@@ -127,7 +127,6 @@ else
                         <label class="form-label">Telefon</label>
                         <input type="text" class="form-control" name="PhoneNumber" id="updatePhone" />
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Birim</label>
                         <select class="form-select" name="UnitId" id="updateUnitId">
@@ -136,8 +135,8 @@ else
                                 <option value="@item.Value">@item.Text</option>
                             }
                         </select>
-
                     </div>
+
 
                     <div class="mb-3">
                         <label class="form-label">Yeni Şifre</label>
@@ -167,6 +166,46 @@ else
 
 
 <script>
+    $(document).ready(function () {
+        // Her iki tablo için ayrı ayrı DataTable başlat
+        ['#userTable'].forEach(function (selector) {
+            const tablo = $(selector);
+            if (tablo.length && !$.fn.DataTable.isDataTable(tablo)) {
+                tablo.DataTable({
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    responsive: true,
+                    dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+                    buttons: [
+                        {
+                            extend: 'collection',
+                            text: 'Dışa Aktar',
+                            className: 'btn btn-secondary',
+                            buttons: [
+                                { extend: 'copy', text: 'Kopyala' },
+                                { extend: 'excel', text: 'Excel' },
+                                { extend: 'csv', text: 'CSV' },
+                                { extend: 'pdf', text: 'PDF' },
+                                { extend: 'print', text: 'Yazdır' }
+                            ]
+                        }
+                    ],
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                    }
+                });
+            }
+        });
+
+        // Tab geçişinde tablo yeniden boyutlandırılsın (gizli gelen tablo sorununu çözer)
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            const targetId = $(e.target).attr("data-bs-target");
+            const table = $(targetId).find('table').DataTable();
+            table.columns.adjust().responsive.recalc();
+        });
+    });
+
     function openDetailModal(id) {
       $.get('/User/GetUser/' + id, function (data) {
         if (data.success) {
@@ -184,10 +223,7 @@ else
         }
       });
     }
-
-
-
-      function openUpdateModal(id) {
+        function openUpdateModal(id) {
       $.get('/User/GetUser/' + id, function (data) {
         if (data.success) {
           $('#updateUserId').val(data.id);
@@ -196,8 +232,9 @@ else
           $('#updateEmail').val(data.email);
           $('#updatePhone').val(data.phoneNumber);
           $('#updateTc').val(data.tcKimlikNo);
+          $('#updateIsAdmin').prop('checked', data.isAdmin);
           $('#updateUnitId').val(String(data.unitId));
-          $('#updateIsAdmin').prop('checked', data.isAdmin); // ✅ Checkbox değeri ayarlanıyor
+
 
           const modal = new bootstrap.Modal(document.getElementById('updateUserModal'));
           modal.show();
@@ -206,6 +243,7 @@ else
         }
       });
     }
+
 
 
 

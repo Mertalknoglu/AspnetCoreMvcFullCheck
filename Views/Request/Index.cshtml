@@ -70,9 +70,68 @@
                     </button>
                 </div>
             </div>
-
-
         </div>
+        <!-- Masaüstü filtre formu (sadece md ve üstü cihazlarda görünsün) -->
+        <div class="d-none d-md-block mb-4">
+        <form method="get" action="@Url.Action("FilteredIndex", "Request")" class="row g-3 mb-3">
+
+    <div class="col-md-3">
+        <label class="form-label">Başlangıç Tarihi</label>
+        <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Bitiş Tarihi</label>
+        <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate" />
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Durum</label>
+        <select name="statusId" class="form-select">
+            <option value="">Seçiniz</option>
+            @foreach (var item in ViewBag.RequestStatusList as List<SelectListItem>)
+            {
+                <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedStatusId ? "selected" : null)">
+                    @item.Text
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Kategori</label>
+        <select name="typeId" class="form-select">
+            <option value="">Seçiniz</option>
+            @foreach (var item in ViewBag.RequestTypeList as List<SelectListItem>)
+            {
+                <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedTypeId ? "selected" : null)">
+                    @item.Text
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Birim</label>
+        <select name="unitId" class="form-select">
+            <option value="">Seçiniz</option>
+            @foreach (var item in ViewBag.RequestUnitList as List<SelectListItem>)
+            {
+                <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedUnitId ? "selected" : null)">
+                    @item.Text
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-12 text-end">
+        <button type="submit" class="btn btn-primary">Ara</button>
+        <a href="@Url.Action("Index", "Request")" class="btn btn-secondary">Filtreyi Kaldır</a>
+    </div>
+
+</form>
+        </div>
+
         <ul class="nav nav-tabs card-header-tabs" id="requestTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="gelen-tab" data-bs-toggle="tab" data-bs-target="#gelen" type="button" role="tab" aria-controls="gelen" aria-selected="true">

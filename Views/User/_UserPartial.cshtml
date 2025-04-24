@@ -213,7 +213,7 @@ else
           $('#detailName').text(data.firstName + " " + data.lastName);
           $('#detailEmail').text(data.email);
           $('#detailPhone').text(data.phoneNumber);
-          $('#detailUnit').text(data.unit);
+          $('#updateUnitId').val(String(data.unitId));
           $('#detailRole').text(data.isAdmin ? "Yönetici" : "Kullanıcı");
 
           const modal = new bootstrap.Modal(document.getElementById('userDetailModal'));

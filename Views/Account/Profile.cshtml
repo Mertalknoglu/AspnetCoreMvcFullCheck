@@ -21,7 +21,7 @@
 
                         <div class="button-wrapper">
                             <label for="upload" class="btn btn-primary me-3 mb-4">
-                                <span class="d-none d-sm-block">Upload new photo</span>
+                                <span class="d-none d-sm-block">Fotoğraf Yükle</span>
                                 <i class="bx bx-upload d-block d-sm-none"></i>
                                 <input type="file" id="upload" name="UploadedPhoto" hidden accept="image/*" onchange="previewImage(event)" />
                             </label>
@@ -97,14 +97,11 @@
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function () {
+              console.log( document.getElementById('profilePreview').src);
                 document.getElementById('profilePreview').src = reader.result;
             };
             reader.readAsDataURL(event.target.files[0]);
         }
 
-        function resetImage() {
-            document.getElementById('profilePreview').src = "/img/avatars/1.png";
-            document.getElementById('upload').value = "";
-        }
     </script>
 }

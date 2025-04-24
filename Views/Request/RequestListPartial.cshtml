@@ -17,7 +17,7 @@
                         <th></th>
                         <th>Ad Soyad <b>↑↓</b></th>
                         <th>Talep Tipi <b>↑↓</b></th>
-                        <th>Birim <b>↑↓</b></th>
+                        <th>Iletilen Birim <b>↑↓</b></th>
                         <th>Durum <b>↑↓</b></th>
                         <th>Tarih <b>↑↓</b> </th>
                         <th>Açıklama <b>↑↓</b></th>
@@ -50,20 +50,28 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <span class="badge bg-success px-3 py-2">KAPANDI</span>
-                                    }
-
-                                    @if (!ViewBag.IsAdmin && item.RequestStatus?.Status != "Tamamlandı")
-                                    {
                                         <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(@item.Id)">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        @if (item.RequestStatus?.Status == "Tamamlandı")
+                                        {
+                                            <span class="badge bg-outline-danger px-3 py-2" style="background-color:#dc3545; color:white;">KAPANDI</span>
+                                        }
                                     }
-
-                                    @if (!ViewBag.IsAdmin && item.RequestStatus?.Status == "Tamamlandı")
+                                    else @if (!ViewBag.IsAdmin && item.RequestStatus?.Status != "Tamamlandı")
                                     {
-                                        <span class="badge bg-success px-3 py-2">KAPANDI</span>
+                                       
+                                        <button class="btn btn-sm btn-outline-primary" title="Düzenle" onclick="openUpdateModal(@item.Id)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    }else{
+
+                                        @if (item.RequestStatus?.Status == "Tamamlandı")
+                                        {
+                                            <span class="badge bg-success px-3 py-2" style="background-color:#dc3545; color:white;">KAPANDI</span>
+                                        }
                                     }
+                                  
                                 </div>
                             </td>
 
@@ -92,12 +100,13 @@
                                 <span class="badge bg-secondary">@item.RequestStatus?.Status</span>
                             </div>
                             <ul class="list-unstyled small mb-2">
-                                <li><strong>Tipi:</strong> @item.RequestType?.Type</li>
-                                <li><strong>Birim:</strong> @item.RequestUnit?.Unit</li>
+                                <li><strong>Talep Tipi:</strong> @item.RequestType?.Type</li>
+                                <li><strong>Iletilen Birim:</strong> @item.RequestUnit?.Unit</li>
                                 <li><strong>Tarih:</strong> @item.Date.ToString("dd.MM.yyyy")</li>
                                 <li><strong>Açıklama:</strong> @item.Description</li>
                             </ul>
                             <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+                                <!-- Detay Butonu (herkes görür) -->
                                 <button class="btn btn-sm btn-outline-dark" onclick="showDetails(@item.Id)">
                                     <i class="bi bi-eye"></i>
                                 </button>
@@ -110,24 +119,30 @@
                                     <button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal(@item.Id)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <span class="badge bg-success w-100 text-center">KAPANDI</span>
-                                }
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(@item.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
 
-                                @if (!ViewBag.IsAdmin && item.RequestStatus?.Status != "Tamamlandı")
+                                    @if (item.RequestStatus?.Status == "Tamamlandı")
+                                    {
+                                        <span class="badge w-100 text-center" style="background-color:#dc3545; color:white;">KAPANDI</span>
+                                    }
+                                }
+                                else if (!ViewBag.IsAdmin && item.RequestStatus?.Status != "Tamamlandı")
                                 {
                                     <button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal(@item.Id)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(@item.Id)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
                                 }
-
-                                @if (!ViewBag.IsAdmin && item.RequestStatus?.Status == "Tamamlandı")
+                                else
                                 {
-                                    <span class="badge bg-success w-100 text-center">KAPANDI</span>
+                                    @if (item.RequestStatus?.Status == "Tamamlandı")
+                                    {
+                                        <span class="badge w-100 text-center" style="background-color:#dc3545; color:white;">KAPANDI</span>
+                                    }
                                 }
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -137,8 +152,8 @@
 }
 else
 {
-    <div class="alert alert-info text-center">Kayıt bulunamadı.</div>
-    <a href="@Url.Action("Index", "Request")" class="btn btn-secondary align-items-center">Filtreyi Kaldır</a>
+    <div class="alert alert-danger text-center">Kayıt bulunamadı.</div>
+    <a href="@Url.Action("Index", "Request")" class="btn btn-outline-primary align-items-center">Talep listesini yenile</a>
 }
 <!-- Export Modal -->
 <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
@@ -158,6 +173,7 @@ else
         </div>
     </div>
 </div>
+<!-- Filtre Modal (mobil için) -->
 <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow">
@@ -167,14 +183,36 @@ else
             </div>
             <form method="get" action="@Url.Action("FilteredIndex", "Request")">
                 <div class="modal-body">
-                    <input class="form-control mb-2" name="name" placeholder="Ad Soyad">
-                    <input class="form-control mb-2" name="type" placeholder="Talep Tipi">
-                    <input class="form-control mb-2" name="unit" placeholder="Birim">
-                    <input class="form-control mb-2" name="status" placeholder="Durum">
+                    <input type="date" name="startDate" class="form-control mb-2" placeholder="Başlangıç Tarihi">
+                    <input type="date" name="endDate" class="form-control mb-2" placeholder="Bitiş Tarihi">
+
+                    <select name="statusId" class="form-select mb-2">
+                        <option value="">Durum Seçiniz</option>
+                        @foreach (var item in ViewBag.RequestStatusList as List<SelectListItem>)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+
+                    <select name="typeId" class="form-select mb-2">
+                        <option value="">Kategori Seçiniz</option>
+                        @foreach (var item in ViewBag.RequestTypeList as List<SelectListItem>)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+
+                    <select name="unitId" class="form-select mb-2">
+                        <option value="">Birim Seçiniz</option>
+                        @foreach (var item in ViewBag.RequestUnitList as List<SelectListItem>)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Filtrele</button>
-                    <a href="@Url.Action("Index", "Request")" class="btn btn-secondary">Filtreyi Kaldır</a>
+                <div class="modal-footer d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2">Ara</button>
+                    <a href="@Url.Action("Index", "Request")" class="btn btn-outline-secondary">Filtreyi Kaldır</a>
                 </div>
             </form>
         </div>
@@ -182,10 +220,8 @@ else
 </div>
 
 
-
 <script>
-     $(document).ready(function () {
-        // Her iki tablo için ayrı ayrı DataTable başlat
+    $(document).ready(function () {
         ['#gelenTablo', '#gonderilenTablo'].forEach(function (selector) {
             const tablo = $(selector);
             if (tablo.length && !$.fn.DataTable.isDataTable(tablo)) {
@@ -194,12 +230,28 @@ else
                     searching: true,
                     ordering: true,
                     responsive: true,
-                    dom: '<"d-flex justify-content-between align-items-center mb-2"fB><"table-responsive"t><"d-flex justify-content-between mt-2"lip>',
+                        dom: `
+        <'row mb-2'
+            <'col-md-6 d-flex align-items-center gap-3'
+                <'me-2'l>
+                B
+            >
+            <'col-md-6 text-end'f>
+        >
+        <'row'
+            <'col-12 table-responsive't>
+        >
+        <'row mt-2'
+            <'col-md-6'i>
+            <'col-md-6 d-flex justify-content-end'p>
+        >
+    `,
+
                     buttons: [
                         {
                             extend: 'collection',
                             text: 'Dışa Aktar',
-                            className: 'btn btn-secondary',
+                            className: 'btn btn-outline-secondary',
                             buttons: [
                                 { extend: 'copy', text: 'Kopyala' },
                                 { extend: 'excel', text: 'Excel' },
@@ -210,19 +262,21 @@ else
                         }
                     ],
                     language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json",
+                        lengthMenu: "_MENU_ adet kayıt listele"
                     }
                 });
             }
         });
 
-        // Tab geçişinde tablo yeniden boyutlandırılsın (gizli gelen tablo sorununu çözer)
+        // Sekme geçişlerinde responsive fix
         $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
             const targetId = $(e.target).attr("data-bs-target");
             const table = $(targetId).find('table').DataTable();
             table.columns.adjust().responsive.recalc();
         });
     });
+
 
     // Detayları gösteren modalı aç
     function showDetails(id) {
@@ -465,5 +519,22 @@ $(document).ready(function () {
         }
     }
 
+    function deleteFile(filePath, requestId) {
+        if (!confirm("Bu dosyayı silmek istediğinize emin misiniz?")) return;
+
+        $.ajax({
+            url: '/Request/DeleteFile',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ filePath: filePath, requestId: requestId }),
+            success: function () {
+                alert("Dosya silindi.");
+                openUpdateModal(requestId); // Silindikten sonra yeniden yükle
+            },
+            error: function () {
+                alert("Dosya silinirken bir hata oluştu.");
+            }
+        });
+    }
 
 </script>

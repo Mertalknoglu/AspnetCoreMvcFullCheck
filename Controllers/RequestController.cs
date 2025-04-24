@@ -254,12 +254,6 @@ public class RequestController : Controller
 
     var user = await _userManager.GetUserAsync(User);
 
-    // ❌ Eğer talebi oluşturan kullanıcıysa silmeye izin verme
-    if (requester.UserId == user.Id)
-    {
-      return Json(new { success = false, message = "Kendi oluşturduğunuz talebi silemezsiniz." });
-    }
-
     requester.IsDeleted = true;
     requester.ModifiedAt = DateTime.Now;
     requester.ModifiedBy = user.Id;
@@ -441,62 +435,68 @@ public class RequestController : Controller
   }
   // Mevcut Index metodunu bozmadan filtreleme için alternatif action:
   [HttpGet]
-  public async Task<IActionResult> FilteredIndex(string name, string type, string unit, string status)
+  public async Task<IActionResult> FilteredIndex(string? startDate, string? endDate, int? statusId, int? typeId, int? unitId)
   {
     var user = await _userManager.GetUserAsync(User);
     ViewBag.IsAdmin = user.IsAdmin;
 
     IQueryable<Request> query = _context.Requests
-        .Where(r => !r.IsDeleted)
-        .Include(r => r.RequestStatus)
-        .Include(r => r.RequestType)
-        .Include(r => r.RequestUnit);
+        .Include(x => x.RequestType)
+        .Include(x => x.RequestStatus)
+        .Include(x => x.RequestUnit)
+        .Where(r => !r.IsDeleted);
 
-    // Kullanıcı Admin değilse, birime göre filtrele
     if (!user.IsAdmin)
     {
       query = query.Where(r => r.RequestUnitId == user.UnitId || r.UserId == user.Id);
     }
 
-    // Filtreleme kriterleri:
-    if (!string.IsNullOrWhiteSpace(name))
-      query = query.Where(r => (r.FirstName + " " + r.Surname).Contains(name));
-
-    if (!string.IsNullOrWhiteSpace(type))
-      query = query.Where(r => r.RequestType.Type.Contains(type));
-
-    if (!string.IsNullOrWhiteSpace(unit))
-      query = query.Where(r => r.RequestUnit.Unit.Contains(unit));
-
-    if (!string.IsNullOrWhiteSpace(status))
-      query = query.Where(r => r.RequestStatus.Status.Contains(status));
-
-    var filteredRequests = await query.ToListAsync();
-
-    // ViewBag verileri mevcut yapı ile uyumlu
-    ViewBag.GelenTalepler = filteredRequests.Where(r => r.RequestUnitId == user.UnitId || user.IsAdmin).ToList();
-    ViewBag.GonderdigimTalepler = filteredRequests.Where(r => r.UserId == user.Id).ToList();
-
-    ViewBag.RequestStatusList = _context.RequestStatuses.Select(x => new SelectListItem
+    if (statusId.HasValue)
     {
-      Value = x.Id.ToString(),
-      Text = x.Status
-    }).ToList();
+      query = query.Where(r => r.RequestStatusId == statusId);
+      ViewBag.SelectedStatusId = statusId.ToString();
+    }
 
-    ViewBag.RequestTypeList = _context.RequestTypes.Select(x => new SelectListItem
+    if (typeId.HasValue)
     {
-      Value = x.Id.ToString(),
-      Text = x.Type
-    }).ToList();
+      query = query.Where(r => r.RequestTypeId == typeId);
+      ViewBag.SelectedTypeId = typeId.ToString();
+    }
 
-    ViewBag.RequestUnitList = _context.RequestUnits.Select(x => new SelectListItem
+    if (unitId.HasValue)
     {
-      Value = x.Id.ToString(),
-      Text = x.Unit
-    }).ToList();
+      query = query.Where(r => r.RequestUnitId == unitId);
+      ViewBag.SelectedUnitId = unitId.ToString();
+    }
 
-    return View("Index"); // Aynı Index.cshtml sayfasına yönlendir
+    if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out var start))
+    {
+      query = query.Where(r => r.Date >= start);
+      ViewBag.StartDate = start.ToString("yyyy-MM-dd");
+    }
+
+    if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out var end))
+    {
+      // Ertesi günün 00:00:00'ına kadar alır, böylece aynı gün dahil olur
+      var inclusiveEnd = end.AddDays(1);
+      query = query.Where(r => r.Date < inclusiveEnd);
+      ViewBag.EndDate = end.ToString("yyyy-MM-dd");
+    }
+
+
+    var filtered = await query.ToListAsync();
+
+    ViewBag.GelenTalepler = filtered.Where(r => r.RequestUnitId == user.UnitId || user.IsAdmin).ToList();
+    ViewBag.GonderdigimTalepler = filtered.Where(r => r.UserId == user.Id).ToList();
+
+    ViewBag.RequestStatusList = _context.RequestStatuses.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Status }).ToList();
+    ViewBag.RequestTypeList = _context.RequestTypes.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Type }).ToList();
+    ViewBag.RequestUnitList = _context.RequestUnits.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Unit }).ToList();
+
+    return View("Index");
   }
+
+
 
   private List<string> ValidateRequester(Request model)
   {

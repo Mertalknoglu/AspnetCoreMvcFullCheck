@@ -1,57 +1,115 @@
-@* @using TalepYonetim.Models.ViewModel
-@model List<RequestListViewModel>
-
+@model dynamic
 @{
-    ViewData["Title"] = "Talepler";
+    ViewData["Title"] = "Dashboard";
+    var durumlar = ViewBag.RequestStatuses as List<string>;
+    var birimDurumVerisi = ViewBag.BirimDurumVerisi as List<dynamic>;
 }
 
-<div class="card">
-    <h5 class="card-header">Talepler Listesi</h5>
-    <div class="table-responsive text-nowrap">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Talep Sahibi</th>
-                    <th>Talep Türü</th>
-                    <th>Açıklama</th>
-                    <th>Tarih</th>
-                    <th>Durum</th>
-                    <th>İşlemler</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                @foreach (var request in Model)
-                {
-                    <tr>
-                        <td>@request.Id</td>
-                        <td>@request.UserName @request.UserSurname</td>
-                        <td>@request.RequestType</td>
-                        <td>@request.Description</td>
-                        <td>@request.Date.ToString("dd.MM.yyyy")</td>
-                        <td>
-                            <span class="badge bg-label-primary me-1">@request.RequestStatus</span>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="@Url.Action("Edit", "Request", new { id = request.Id })">
-                                        <i class="bx bx-edit-alt me-1"></i> Düzenle
-                                    </a>
-                                    <a class="dropdown-item text-danger" href="@Url.Action("Delete", "Request", new { id = request.Id })"
-                                       onclick="return confirm('Bu talebi silmek istediğinize emin misiniz?');">
-                                        <i class="bx bx-trash me-1"></i> Sil
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Anasayfa /</span> Talep Durumu</h4>
+
+    <!-- Kart: Toplam Talep Sayısı -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <ul class="nav nav-pills justify-content-center mb-3" id="timeTab">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-range="daily">Günlük</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-range="weekly">Haftalık</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-range="monthly">Aylık</button>
+                        </li>
+                    </ul>
+
+                    <h3 id="totalRequest" class="mb-1">0</h3>
+                    <p class="text-muted">Oluşturulan Talep</p>
+
+                    <div class="progress" style="height: 8px; border-radius: 4px;">
+                        <div id="completedBar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                        <div id="pendingBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                        <div id="cancelledBar" class="progress-bar bg-dark" role="progressbar" style="width: 0%"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between text-muted mt-2">
+                        <span><strong id="completedText">0</strong> Sonuçlanan</span>
+                        <span><strong id="pendingText">0</strong> Bekleyen</span>
+                        <span><strong id="cancelledText">0</strong> İptal</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Grafik Alanı: Birime Göre Dağılım -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Kategori Dağılımı</div>
+                <div class="card-body">
+                    <canvas id="chartCategory"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Birim Dağılımı</div>
+                <div class="card-body">
+                    <canvas id="chartUnit"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Kaynak Dağılımı</div>
+                <div class="card-body">
+                    <canvas id="chartSource"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
- *@
+
+
+@section Scripts {
+    <script>
+        const requestData = {
+          daily: @Html.Raw(Json.Serialize(ViewBag.DailyData)),
+          weekly: @Html.Raw(Json.Serialize(ViewBag.WeeklyData)),
+          monthly: @Html.Raw(Json.Serialize(ViewBag.MonthlyData))
+        };
+
+        function updateProgress(data) {
+          console.log(data;
+          const total = data.Total || 0;
+          const completed = data.Completed || 0;
+          const pending = data.Pending || 0;
+          const cancelled = data.Cancelled || 0;
+
+          document.getElementById("totalRequest").innerText = total;
+          document.getElementById("completedText").innerText = completed;
+          document.getElementById("pendingText").innerText = pending;
+          document.getElementById("cancelledText").innerText = cancelled;
+
+          document.getElementById("completedBar").style.width = total ? (completed / total * 100) + '%' : '0%';
+          document.getElementById("pendingBar").style.width = total ? (pending / total * 100) + '%' : '0%';
+          document.getElementById("cancelledBar").style.width = total ? (cancelled / total * 100) + '%' : '0%';
+        }
+
+        document.querySelectorAll("#timeTab button").forEach(btn => {
+          btn.addEventListener("click", function () {
+            document.querySelectorAll("#timeTab button").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            const range = this.getAttribute("data-range");
+            updateProgress(requestData[range]);
+          });
+        });
+
+        // Sayfa yüklenince günlük veriyi başlat
+        updateProgress(requestData.daily);
+    </script>
+}

@@ -41,5 +41,7 @@ namespace AspnetCoreMvcFull.Models.ViewModel
     public int UnitId { get; set; }
 
     public bool IsAdmin { get; set; }
+    public IFormFile? UploadedPhoto { get; set; }
+
   }
 }

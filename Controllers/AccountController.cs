@@ -91,7 +91,8 @@ namespace AspnetCoreMvcFull.Controllers
           FirstName = model.FirstName,
           LastName = model.LastName,
           TcKimlikNo = model.TcKimlikNo,
-          PhoneNumber = model.PhoneNumber // Telefon numarasını ekle
+          PhoneNumber = model.PhoneNumber,
+          ProfilePicture = "1.png"
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -239,7 +240,11 @@ namespace AspnetCoreMvcFull.Controllers
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-      var user = await _userManager.GetUserAsync(User);
+      var userId = int.Parse(_userManager.GetUserId(User));
+      var user = await _userManager.Users
+          .Include(u => u.Unit)
+          .FirstOrDefaultAsync(u => u.Id == userId);
+
 
       if (user == null)
         return RedirectToAction("Login", "Account");
@@ -250,7 +255,7 @@ namespace AspnetCoreMvcFull.Controllers
         LastName = user.LastName,
         Email = user.Email,
         PhoneNumber = user.PhoneNumber,
-        UnitName = user.Unit?.Unit ?? "Tanımsız",
+        UnitName = user.Unit?.Unit,
         IsAdmin = user.IsAdmin ? true : false,
         ProfilePicture = user.ProfilePicture
       };
@@ -280,10 +285,12 @@ namespace AspnetCoreMvcFull.Controllers
           if (!Directory.Exists(uploadsPath))
             Directory.CreateDirectory(uploadsPath);
 
-          var fileName = $"{user.ProfilePicture}";
+          var fileName = string.IsNullOrWhiteSpace(user.ProfilePicture)
+    ? $"{Guid.NewGuid()}{Path.GetExtension(model.UploadedPhoto.FileName)}"
+    : user.ProfilePicture;
           var fullPath = Path.Combine(uploadsPath, fileName);
 
-          using (var stream = new FileStream(fullPath, FileMode.Create))
+          using (var stream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None))
           {
             await model.UploadedPhoto.CopyToAsync(stream);
           }
@@ -309,6 +316,11 @@ namespace AspnetCoreMvcFull.Controllers
 
       if (result.Succeeded)
       {
+        HttpContext.Session.SetString("UserFullName", user.FirstName + " " + user.LastName);
+        HttpContext.Session.SetString("ProfilePicture", user.ProfilePicture ?? "1.png");
+        HttpContext.Session.SetString("PhoneNumber", user.PhoneNumber ?? "");
+        HttpContext.Session.SetString("Email", user.Email ?? "");
+        HttpContext.Session.SetString("UnitName", user.Unit?.Unit ?? "Tanımsız");
         TempData["SuccessMessage"] = "Profil bilgileri güncellendi.";
         return RedirectToAction("Profile");
       }

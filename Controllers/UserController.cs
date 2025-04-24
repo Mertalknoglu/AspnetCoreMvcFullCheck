@@ -161,6 +161,7 @@ namespace AspnetCoreMvcFull.Controllers
         return View(model);
       }
 
+      // 👤 Yeni kullanıcı nesnesi
       var user = new ApplicationUser
       {
         UserName = model.Email,
@@ -170,9 +171,35 @@ namespace AspnetCoreMvcFull.Controllers
         PhoneNumber = model.PhoneNumber,
         TcKimlikNo = model.TcKimlikNo,
         UnitId = model.UnitId,
-        IsAdmin = model.IsAdmin
+        IsAdmin = model.IsAdmin,
+        ProfilePicture = "1.png" // default atanır, sonra dosya varsa değişir
       };
 
+      // 📂 Dosya yükleme
+      if (model.UploadedPhoto != null && model.UploadedPhoto.Length > 0)
+      {
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var ext = Path.GetExtension(model.UploadedPhoto.FileName).ToLowerInvariant();
+
+        if (allowedExtensions.Contains(ext) && model.UploadedPhoto.Length <= 800 * 1024)
+        {
+          var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+          if (!Directory.Exists(uploadsPath))
+            Directory.CreateDirectory(uploadsPath);
+
+          var fileName = $"{Guid.NewGuid()}{ext}";
+          var fullPath = Path.Combine(uploadsPath, fileName);
+
+          using (var stream = new FileStream(fullPath, FileMode.Create))
+          {
+            await model.UploadedPhoto.CopyToAsync(stream);
+          }
+
+          user.ProfilePicture = fileName;
+        }
+      }
+
+      // 💾 Veritabanına kaydet
       var result = await _userManager.CreateAsync(user, model.Password);
 
       if (result.Succeeded)
@@ -186,6 +213,7 @@ namespace AspnetCoreMvcFull.Controllers
       ViewBag.UnitList = new SelectList(_context.RequestUnits, "Id", "Unit");
       return View(model);
     }
+
 
 
 

@@ -11,6 +11,7 @@ namespace AspnetCoreMvcFull.Models.Models
     public string Email { get; set; }
     public string Address { get; set; }
     public string Description { get; set; }
+    public string? Response { get; set; }
     public DateTime Date { get; set; }
 
     public int RequestStatusId { get; set; }

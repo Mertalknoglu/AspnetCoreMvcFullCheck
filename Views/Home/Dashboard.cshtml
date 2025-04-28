@@ -1,0 +1,234 @@
+@using System.Text.Json
+@model dynamic
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    bool isAdmin = (bool)(ViewBag.IsAdmin ?? false);
+    int totalCount = (int)(ViewBag.TotalCount ?? 0);
+    var statuses = ViewBag.Statuses as List<string> ?? new();
+    var statusColors = new Dictionary<string, string>
+            {
+                [statuses.ElementAtOrDefault(0) ?? "Tamamlandı"] = "#28a745",
+                [statuses.ElementAtOrDefault(1) ?? "Beklemede"] = "#ffc107",
+                [statuses.ElementAtOrDefault(2) ?? "İşlemde"] = "#0d6efd"
+            };
+}
+
+<style>
+    .chart-card .card-body {
+        padding: .75rem;
+    }
+
+    .chart-card canvas {
+        max-height: 140px !important;
+    }
+
+    @@media (max-width: 576px) {
+        .chart-card canvas {
+            max-height: 100px !important;
+        }
+    }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Talep Sayısı Kartı -->
+    <div class="row mb-4 gx-3">
+        <div class="col-12 col-md-3">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase">Talep Sayısı</h6>
+                        <h2 class="mb-0">@totalCount</h2>
+                        <small class="text-muted">@((isAdmin) ? "Tüm Talepler" : "Biriminiz")</small>
+                    </div>
+                    <div class="ms-auto">
+                        <i class="bx bx-file font-large-2 text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Segment Bar -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <ul class="nav nav-pills justify-content-center mb-2" id="rangeTabs">
+                        <li class="nav-item"><button class="nav-link active" data-range="daily">Günlük</button></li>
+                        <li class="nav-item"><button class="nav-link" data-range="weekly">Haftalık</button></li>
+                        <li class="nav-item"><button class="nav-link" data-range="monthly">Aylık</button></li>
+                    </ul>
+                    <div class="mb-2">
+                        <i class="bx bx-user-pin font-large-2 mb-1"></i>
+                        <h1 id="rangeTotal">0</h1>
+                        <div>Oluşturulan Talep</div>
+                    </div>
+                    <div class="progress" id="segmentContainer" style="height:1.2rem;"></div>
+                    <div class="d-flex justify-content-between mt-1 px-2" id="statusLabels"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dağılım Grafikleri -->
+    <div class="row g-3 @(isAdmin ? "" : "justify-content-center")">
+        @if (isAdmin)
+        {
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card chart-card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">Birim Dağılımı</h6>
+                        <ul class="nav nav-pills mb-2" id="unitTabs">
+                            <li class="nav-item"><button class="nav-link active" data-range="daily">Günlük</button></li>
+                            <li class="nav-item"><button class="nav-link" data-range="weekly">Haftalık</button></li>
+                            <li class="nav-item"><button class="nav-link" data-range="monthly">Aylık</button></li>
+                        </ul>
+                        <canvas id="unitChart" width="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card chart-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Durum Dağılımı</h6>
+                    <ul class="nav nav-pills mb-2" id="statusTabs">
+                        <li class="nav-item"><button class="nav-link active" data-range="daily">Günlük</button></li>
+                        <li class="nav-item"><button class="nav-link" data-range="weekly">Haftalık</button></li>
+                        <li class="nav-item"><button class="nav-link" data-range="monthly">Aylık</button></li>
+                    </ul>
+                    <canvas id="statusChart" width="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card chart-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Tip Dağılımı</h6>
+                    <ul class="nav nav-pills mb-2" id="typeTabs">
+                        <li class="nav-item"><button class="nav-link active" data-range="daily">Günlük</button></li>
+                        <li class="nav-item"><button class="nav-link" data-range="weekly">Haftalık</button></li>
+                        <li class="nav-item"><button class="nav-link" data-range="monthly">Aylık</button></li>
+                    </ul>
+                    <canvas id="typeChart" width="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const statuses     = @Html.Raw(JsonSerializer.Serialize(statuses));
+        const statusColors = @Html.Raw(JsonSerializer.Serialize(statusColors));
+
+        function initSegmentBar(){
+          const tabs      = document.querySelectorAll('#rangeTabs button');
+          const totalEl   = document.getElementById('rangeTotal');
+          const segCont   = document.getElementById('segmentContainer');
+          const labelCont = document.getElementById('statusLabels');
+
+          async function fetchData(range){
+            let r = await fetch(`@Url.Action("GetChartData", "Home")?range=${range}`);
+            return r.ok ? r.json() : {};
+          }
+
+          async function update(range){
+            let data  = await fetchData(range);
+            let total = Object.values(data).reduce((a,b)=>a+b,0);
+            totalEl.textContent = total;
+            segCont.innerHTML   = '';
+            statuses.forEach(s => {
+              let v   = data[s]||0,
+                  pct = total ? v/total*100 : 0,
+                  bar = document.createElement('div');
+              bar.classList.add('progress-bar');
+              bar.style.width           = pct + '%';
+              bar.style.backgroundColor = statusColors[s];
+              segCont.appendChild(bar);
+            });
+            labelCont.innerHTML = '';
+            statuses.forEach(s => {
+              let v    = data[s]||0,
+                  cell = document.createElement('div');
+              cell.classList.add('text-center','flex-fill');
+              cell.innerHTML = `<div><strong>${s}</strong></div><div>${v}</div>`;
+              labelCont.appendChild(cell);
+            });
+          }
+
+          tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+              tabs.forEach(x=>x.classList.remove('active'));
+              btn.classList.add('active');
+              update(btn.dataset.range);
+            });
+          });
+          update('daily');
+        }
+
+        function initColoredBar(url, canvasId, tabsSel, label){
+          const ctx = document.getElementById(canvasId).getContext('2d');
+          let chart;
+
+          async function fetchDist(range){
+            let r = await fetch(url + '?range=' + range);
+            return r.ok ? r.json() : {};
+          }
+
+          async function update(range){
+            let data   = await fetchDist(range),
+                labs   = Object.keys(data),
+                vals   = labs.map(l=>data[l]),
+                cols   = labs.map(l=>statusColors[l]||'#0d6efd');
+            if(chart) chart.destroy();
+            chart = new Chart(ctx,{
+              type:'bar',
+              data:{ labels:labs, datasets:[{ label, data:vals, backgroundColor:cols }]},
+              options:{ responsive:true, scales:{ y:{ beginAtZero:true }}}
+            });
+          }
+
+          document.querySelectorAll(tabsSel+' button').forEach(btn=>{
+            btn.addEventListener('click',()=>{
+              document.querySelectorAll(tabsSel+' button').forEach(x=>x.classList.remove('active'));
+              btn.classList.add('active');
+              update(btn.dataset.range);
+            });
+          });
+          update('daily');
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{
+          initSegmentBar();
+
+        @if (isAdmin)
+        {
+            <text>
+                  initColoredBar('@Url.Action("GetUnitDistribution", "Home")', 'unitChart', '#unitTabs', 'Birim Dağılımı');
+            </text>
+            <text>
+                  initColoredBar('@Url.Action("GetStatusDistribution", "Home")', 'statusChart', '#statusTabs', 'Durum Dağılımı');
+            </text>
+            <text>
+                  initColoredBar('@Url.Action("GetTypeDistribution", "Home")', 'typeChart', '#typeTabs', 'Tip Dağılımı');
+            </text>
+        }
+        else
+        {
+            <text>
+              initColoredBar('@Url.Action("GetStatusDistribution", "Home")', 'statusChart', '#statusTabs', 'Durum Dağılımı');
+            </text>
+            <text>
+              initColoredBar('@Url.Action("GetTypeDistribution", "Home")', 'typeChart', '#typeTabs', 'Tip Dağılımı');
+            </text>
+        }
+        });
+    </script>
+}

@@ -32,6 +32,12 @@
         <!-- Başlık -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Menü</span></li>
 
+        <li class='menu-item @(currentPage.StartsWith("/Home") ? "active" : "")'>            
+            <a asp-controller="Home" asp-action="Dashboard" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-smile"></i>
+                <div>Anasayfa</div>
+            </a>
+        </li>
         <!-- Talep Listesi -->
         <li class='menu-item @(currentPage.StartsWith("/Request") ? "active" : "")'>
             <a asp-controller="Request" asp-action="Index" class="menu-link">
@@ -39,6 +45,7 @@
                 <div>Talep Listesi</div>
             </a>
         </li>
+
 
         @if (isAdmin == "Yönetici")
         {

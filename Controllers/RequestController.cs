@@ -72,8 +72,9 @@ public class RequestController : Controller
   // GET: Requester/Create
   public IActionResult Create()
   {
-    // RequestStatuses ve RequestTypes listesini ViewData yerine ViewBag üzerinden gönderiyoruz.
-    ViewBag.RequestStatusList = new SelectList(_context.RequestStatuses, "Id", "Status");
+    var statuses = _context.RequestStatuses.ToList();
+    var defaultStatusId = statuses.FirstOrDefault(s => s.Status == "İşlemde")?.Id;
+    ViewBag.RequestStatusList = new SelectList(statuses, "Id", "Status", defaultStatusId);
     ViewBag.RequestTypeList = new SelectList(_context.RequestTypes, "Id", "Type");
     ViewBag.RequestUnitList = new SelectList(_context.RequestUnits, "Id", "Unit");
 
@@ -160,7 +161,7 @@ public class RequestController : Controller
 
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task<IActionResult> Edit(int id, [Bind("Id,Tckn,FirstName,Surname,TelNo,Email,Address,Description,RequestStatusId,RequestTypeId,RequestUnitId")] Request requester, [FromForm] IFormFile[] newFiles)
+  public async Task<IActionResult> Edit(int id, [Bind("Id,Tckn,FirstName,Surname,TelNo,Email,Address,Description,RequestStatusId,RequestTypeId,RequestUnitId,Response")] Request requester, [FromForm] IFormFile[] newFiles)
   {
     if (id != requester.Id)
       return NotFound();
@@ -198,6 +199,7 @@ public class RequestController : Controller
     existingRequester.Email = requester.Email;
     existingRequester.Address = requester.Address;
     existingRequester.Description = requester.Description;
+    existingRequester.Response = requester.Response;
     existingRequester.RequestStatusId = requester.RequestStatusId;
     existingRequester.RequestTypeId = requester.RequestTypeId;
     existingRequester.RequestUnitId = requester.RequestUnitId;

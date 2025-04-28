@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AspnetCoreMvcFull.Models;
+using AspnetCoreMvcFull.Models.Models;
 
 namespace AspnetCoreMvcFull.Controllers
 {
@@ -8,83 +11,185 @@ namespace AspnetCoreMvcFull.Controllers
   public class HomeController : Controller
   {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public HomeController(ApplicationDbContext context)
+    public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
       _context = context;
+      _userManager = userManager;
     }
 
-    public async Task<IActionResult> Index()
+    // ───────────────────────────────────────────────────────────
+    // Dashboard – sayfa, segment bar, dağılımlar ve carousel
+    // ───────────────────────────────────────────────────────────
+    public async Task<IActionResult> Dashboard(int? page)
     {
-      var requests = await _context.Requests
-          .Include(r => r.RequestStatus)
-          .Include(r => r.RequestUnit)
-          .Include(r => r.RequestType)
-          .Where(r => !r.IsDeleted)
+      var user = await _userManager.GetUserAsync(User);
+      bool isAdmin = user.IsAdmin;
+
+      // 1️⃣ Talep statüleri (segment bar için)
+      var statuses = await _context.RequestStatuses
+          .OrderBy(s => s.Id)
+          .Select(s => s.Status)
           .ToListAsync();
 
-      ViewBag.TotalRequestCount = requests.Count;
-      ViewBag.CompletedCount = requests.Count(r => r.RequestStatus.Status == "Sonuçlandı");
-      ViewBag.PendingCount = requests.Count(r => r.RequestStatus.Status == "Bekliyor");
-      ViewBag.CancelledCount = requests.Count(r => r.RequestStatus.Status == "İptal");
+      // 2️⃣ Toplam talep sayısı
+      int totalCount = isAdmin
+          ? await _context.Requests.CountAsync(r => !r.IsDeleted)
+          : await _context.Requests.CountAsync(r => !r.IsDeleted && r.RequestUnitId == user.UnitId);
 
-      var now = DateTime.Now;
-      var startOfDay = now.Date;
-      var startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek + 1); // Pazartesi
-      var startOfMonth = new DateTime(now.Year, now.Month, 1);
+      // 3️⃣ “İsteklerim” – tüm kayıtlar
+      var allReqs = await _context.Requests
+          .Where(r => !r.IsDeleted && r.UserId == user.Id)
+          .Include(r => r.RequestStatus)
+          .Include(r => r.RequestType)
+          .Include(r => r.RequestUnit)
+          .OrderByDescending(r => r.Date)
+          .ToListAsync();
 
-      ViewBag.DailyData = await GetStatusCounts(startOfDay);
-      ViewBag.WeeklyData = await GetStatusCounts(startOfWeek);
-      ViewBag.MonthlyData = await GetStatusCounts(startOfMonth);
+      // 4️⃣ Sayfalama
+      int pageSize = 5;
+      int pageNumber = page ?? 1;
+      var pagedReqs = allReqs
+          .Skip((pageNumber - 1) * pageSize)
+          .Take(pageSize)
+          .ToList();
+
+      // 5️⃣ ViewBag’e aktar
+      ViewBag.IsAdmin = isAdmin;
+      ViewBag.TotalCount = totalCount;
+      ViewBag.Statuses = statuses;
+      ViewBag.MyRequests = pagedReqs;
+      ViewBag.Page = pageNumber;
+      ViewBag.PageSize = pageSize;
+      ViewBag.TotalRequests = allReqs.Count;
 
       return View();
     }
 
-    private async Task<object> GetStatusCounts(DateTime startDate)
+    // ───────────────────────────────────────────────────────────
+    // Segment bar için JSON (Günlük/Haftalık/Aylık)
+    // ───────────────────────────────────────────────────────────
+    [HttpGet]
+    public async Task<JsonResult> GetChartData(string range)
     {
-      var results = await _context.Requests
-          .Include(r => r.RequestStatus)
-          .Where(r => !r.IsDeleted && r.Date >= startDate)
+      var user = await _userManager.GetUserAsync(User);
+      bool isAdmin = user.IsAdmin;
+
+      DateTime from = range.ToLower() switch
+      {
+        "weekly" => DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1),
+        "monthly" => new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+        _ => DateTime.Today
+      };
+
+      IQueryable<Request> q = _context.Requests
+          .Where(r => !r.IsDeleted && r.Date >= from)
+          .Include(r => r.RequestStatus);
+
+      if (!isAdmin)
+        q = q.Where(r => r.RequestUnitId == user.UnitId);
+
+      var raw = await q
           .GroupBy(r => r.RequestStatus.Status)
-          .Select(g => new
-          {
-            Status = g.Key,
-            Count = g.Count()
-          })
+          .Select(g => new { Status = g.Key, Count = g.Count() })
           .ToListAsync();
 
-      int completed = results.FirstOrDefault(r => r.Status == "Sonuçlandı")?.Count ?? 0;
-      int pending = results.FirstOrDefault(r => r.Status == "Bekliyor")?.Count ?? 0;
-      int cancelled = results.FirstOrDefault(r => r.Status == "İptal")?.Count ?? 0;
-      int total = completed + pending + cancelled;
-
-      return new
-      {
-        Completed = completed,
-        Pending = pending,
-        Cancelled = cancelled,
-        Total = total
-      };
+      var dict = raw.ToDictionary(x => x.Status, x => x.Count);
+      return Json(dict);
     }
 
+    // ───────────────────────────────────────────────────────────
+    // Birim Dağılımı
+    // ───────────────────────────────────────────────────────────
     [HttpGet]
-    public async Task<IActionResult> GetChartData(string range)
+    public async Task<JsonResult> GetUnitDistribution(string range)
     {
-      DateTime startDate = DateTime.Today;
+      var user = await _userManager.GetUserAsync(User);
+      bool isAdmin = user.IsAdmin;
 
-      switch (range.ToLower())
+      DateTime from = range.ToLower() switch
       {
-        case "weekly":
-          startDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1); break;
-        case "monthly":
-          startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1); break;
-        case "daily":
-        default:
-          startDate = DateTime.Today; break;
-      }
+        "weekly" => DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1),
+        "monthly" => new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+        _ => DateTime.Today
+      };
 
-      var data = await GetStatusCounts(startDate);
-      return Json(data);
+      IQueryable<Request> q = _context.Requests
+          .Where(r => !r.IsDeleted && r.Date >= from)
+          .Include(r => r.RequestUnit);
+
+      if (!isAdmin)
+        q = q.Where(r => r.RequestUnitId == user.UnitId);
+
+      var raw = await q
+          .GroupBy(r => r.RequestUnit.Unit)
+          .Select(g => new { Key = g.Key, Count = g.Count() })
+          .ToListAsync();
+
+      return Json(raw.ToDictionary(x => x.Key, x => x.Count));
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // Durum Dağılımı
+    // ───────────────────────────────────────────────────────────
+    [HttpGet]
+    public async Task<JsonResult> GetStatusDistribution(string range)
+    {
+      var user = await _userManager.GetUserAsync(User);
+      bool isAdmin = user.IsAdmin;
+
+      DateTime from = range.ToLower() switch
+      {
+        "weekly" => DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1),
+        "monthly" => new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+        _ => DateTime.Today
+      };
+
+      IQueryable<Request> q = _context.Requests
+          .Where(r => !r.IsDeleted && r.Date >= from)
+          .Include(r => r.RequestStatus);
+
+      if (!isAdmin)
+        q = q.Where(r => r.RequestUnitId == user.UnitId);
+
+      var raw = await q
+          .GroupBy(r => r.RequestStatus.Status)
+          .Select(g => new { Key = g.Key, Count = g.Count() })
+          .ToListAsync();
+
+      return Json(raw.ToDictionary(x => x.Key, x => x.Count));
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // Tip Dağılımı
+    // ───────────────────────────────────────────────────────────
+    [HttpGet]
+    public async Task<JsonResult> GetTypeDistribution(string range)
+    {
+      var user = await _userManager.GetUserAsync(User);
+      bool isAdmin = user.IsAdmin;
+
+      DateTime from = range.ToLower() switch
+      {
+        "weekly" => DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1),
+        "monthly" => new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+        _ => DateTime.Today
+      };
+
+      IQueryable<Request> q = _context.Requests
+          .Where(r => !r.IsDeleted && r.Date >= from)
+          .Include(r => r.RequestType);
+
+      if (!isAdmin)
+        q = q.Where(r => r.RequestUnitId == user.UnitId);
+
+      var raw = await q
+          .GroupBy(r => r.RequestType.Type)
+          .Select(g => new { Key = g.Key, Count = g.Count() })
+          .ToListAsync();
+
+      return Json(raw.ToDictionary(x => x.Key, x => x.Count));
     }
   }
 }

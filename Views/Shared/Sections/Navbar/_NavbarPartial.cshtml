@@ -6,7 +6,11 @@
     var unit = Context.Session.GetString("UnitName");
     var email = Context.Session.GetString("Email");
     var phone = Context.Session.GetString("PhoneNumber");
+ 
     var profilePic = Context.Session.GetString("ProfilePicture") ?? "1.png";
+    var profilePicWithCacheBuster = Url.Content("~/img/avatars/" + profilePic) + "?v=" + DateTime.Now.Ticks;
+
+
 
 }
 
@@ -52,9 +56,10 @@
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                        <img src="~/img/avatars/@(Context.Session.GetString("ProfilePicture") ?? "1.png")"
+                        <img src="@profilePicWithCacheBuster"
                              class="rounded-circle avatar avatar-online avatar-200"
                              alt="Avatar" />
+
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -63,9 +68,10 @@
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                        <img src="~/img/avatars/@(Context.Session.GetString("ProfilePicture") ?? "1.png")"
-                                             class=" rounded-circle avatar avatar-online avatar-200"
+                                        <img src="@profilePicWithCacheBuster"
+                                             class="rounded-circle avatar avatar-online avatar-200"
                                              alt="Avatar" />
+
                                 </div>
                             </div>
                             <div class="flex-grow-1">

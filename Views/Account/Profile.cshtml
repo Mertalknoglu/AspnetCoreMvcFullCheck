@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "Profil Ayarları";
-    var profilePicPath = Url.Content("~/img/avatars/" + (string.IsNullOrEmpty(Model.ProfilePicture) ? "1.png" : Model.ProfilePicture));
+    var cacheBuster = DateTime.Now.Ticks.ToString();
+    var profilePicPath = Url.Content("~/img/avatars/" + (string.IsNullOrEmpty(Model.ProfilePicture) ? "1.png" : Model.ProfilePicture)) + "?v=" + cacheBuster;
 }
 
 @section PageScripts {
@@ -18,6 +19,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-start align-items-sm-center gap-4 pb-4 border-bottom">
                         <img id="profilePreview" src="@profilePicPath" class="rounded-circle" width="120" height="120" alt="Profil Resmi" />
+
 
                         <div class="button-wrapper">
                             <label for="upload" class="btn btn-primary me-3 mb-4">
@@ -94,14 +96,14 @@
 </div>
 @section Scripts {
     <script>
-        function previewImage(event) {
+               function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function () {
-              console.log( document.getElementById('profilePreview').src);
                 document.getElementById('profilePreview').src = reader.result;
             };
             reader.readAsDataURL(event.target.files[0]);
         }
+
 
     </script>
 }

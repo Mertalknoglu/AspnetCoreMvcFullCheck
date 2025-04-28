@@ -58,7 +58,7 @@ namespace AspnetCoreMvcFull.Controllers
         HttpContext.Session.SetString("UnitName", userUnit?.Unit?.Unit ?? "Tanımsız");
         HttpContext.Session.SetString("ProfilePicture", user.ProfilePicture ?? "1.png");
 
-        return RedirectToAction("Index", "Request");
+        return RedirectToAction("Dashboard", "Home"); ;
       }
 
       ModelState.AddModelError("", "Giriş başarısız. TC Kimlik Numarası veya şifre hatalı.");
@@ -101,7 +101,7 @@ namespace AspnetCoreMvcFull.Controllers
         {
           // Yeni kullanıcı oluşturulduktan sonra giriş işlemi yapılabilir
           await _signInManager.SignInAsync(user, isPersistent: false);
-          return RedirectToAction("Index", "Request");
+          return RedirectToAction("Dashboard", "Home");
         }
 
         foreach (var error in result.Errors)

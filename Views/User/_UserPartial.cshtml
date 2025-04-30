@@ -94,7 +94,7 @@ else
 <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="updateUserForm" method="post">
+            <form id="updateUserForm" method="post" enctype="multipart/form-data">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title text-white" id="updateUserModalLabel">Kullanıcı Güncelle</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -136,7 +136,14 @@ else
                             }
                         </select>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="updateUploadedPhoto" class="form-label">Profil Fotoğrafı</label>
+                        <input type="file"
+                               class="form-control"
+                               id="updateUploadedPhoto"
+                               name="UploadedPhoto"
+                               accept=".jpg,.jpeg,.png,.gif" />
+                    </div>
 
                     <div class="mb-3">
                         <label class="form-label">Yeni Şifre</label>

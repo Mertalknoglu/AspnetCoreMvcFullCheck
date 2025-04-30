@@ -29,5 +29,6 @@ namespace AspnetCoreMvcFull.Models.ViewModel
     [DataType(DataType.Password)]
     [Compare("NewPassword", ErrorMessage = "Şifreler uyuşmuyor")]
     public string? ConfirmPassword { get; set; }
+    public IFormFile? UploadedPhoto { get; set; }
   }
 }

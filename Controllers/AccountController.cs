@@ -208,24 +208,23 @@ namespace AspnetCoreMvcFull.Controllers
 
       return new string(password.OrderBy(c => random.Next()).ToArray());
     }
-
     private async Task SendResetPasswordEmailAsync(string email, string newPassword)
     {
-      var fromAddress = new MailAddress("mertalknoglu12@gmail.com", "AK PARTİ'M"); // Gönderen
-      var toAddress = new MailAddress(email);
-      const string fromPassword = "oecj ljtu uwkg vexb"; // Gmail için özel uygulama şifresi gerekir
-      const string subject = "Gecici Şifre";
-      string body = $"Merhaba, <br><br> Talebiniz üzerine geçici şifreniz oluşturulmuştur:<br><br><strong>{newPassword}</strong><br><br>Lütfen giriş yaptıktan sonra şifrenizi değiştiriniz.";
+      // Gönderen adres ve adı
+      var fromAddress = new MailAddress("info@akpartikayseri.net",
+          "KAYSERİ İL BAŞKANLIĞI TALEP YÖNETİMİ");
 
-      var smtp = new SmtpClient
-      {
-        Host = "smtp.gmail.com",
-        Port = 587,
-        EnableSsl = true,
-        DeliveryMethod = SmtpDeliveryMethod.Network,
-        UseDefaultCredentials = false,
-        Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-      };
+      // Alıcı
+      var toAddress = new MailAddress(email);
+
+      // Mesaj içeriği
+      const string subject = "Geçici Şifreniz";
+      string body = $@"
+        Merhaba,<br/><br/>
+        Talebiniz üzerine geçici şifreniz oluşturulmuştur:<br/><br/>
+        <strong>{newPassword}</strong><br/><br/>
+        Lütfen giriş yaptıktan sonra şifrenizi değiştiriniz.
+    ";
 
       using (var message = new MailMessage(fromAddress, toAddress)
       {
@@ -234,9 +233,24 @@ namespace AspnetCoreMvcFull.Controllers
         IsBodyHtml = true
       })
       {
-        await smtp.SendMailAsync(message);
+        using (var smtp = new SmtpClient
+        {
+          Host = "mail.akpartikayseri.net",
+          Port = 25,
+          EnableSsl = false,
+          DeliveryMethod = SmtpDeliveryMethod.Network,
+          UseDefaultCredentials = false,
+          Credentials = new NetworkCredential(
+                                    "info@akpartikayseri.net",
+                                    "Kayseri123654*?"
+                                )
+        })
+        {
+          await smtp.SendMailAsync(message);
+        }
       }
     }
+
     [HttpGet]
     public async Task<IActionResult> Profile()
     {

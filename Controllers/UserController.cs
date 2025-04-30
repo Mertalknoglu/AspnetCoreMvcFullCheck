@@ -103,7 +103,25 @@ namespace AspnetCoreMvcFull.Controllers
             return Json(new { success = false, message = $"Şifre güncellenemedi: {errorList}" });
           }
         }
+        if (model.UploadedPhoto != null && model.UploadedPhoto.Length > 0)
+        {
+          var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+          var ext = Path.GetExtension(model.UploadedPhoto.FileName).ToLowerInvariant();
+          if (allowed.Contains(ext) && model.UploadedPhoto.Length <= 800 * 1024)
+          {
+            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+            if (!Directory.Exists(uploads)) Directory.CreateDirectory(uploads);
 
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var fullPath = Path.Combine(uploads, fileName);
+            using var stream = new FileStream(fullPath, FileMode.Create);
+            await model.UploadedPhoto.CopyToAsync(stream);
+
+            // eski resim dosyasını opsiyonel silmek isterseniz burada handle edin…
+
+            user.ProfilePicture = fileName;
+          }
+        }
         // Diğer alanlar
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;

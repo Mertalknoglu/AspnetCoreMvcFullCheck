@@ -198,6 +198,14 @@
                         <div class="col-7 d-flex flex-wrap gap-2" id="modalFiles"></div>
                     </div>
                     <div class="row py-2 border-top">
+                        <div class="col-5 fw-bold text-dark">Yanıt Geçmişi:</div>
+                        <div class="col-7">
+                            <div style="max-height:200px; overflow-y:auto;" class="custom-scroll">
+                                <div id="modalResponses" class="d-flex flex-column gap-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row py-2 border-top">
                         <div class="col-5 fw-bold text-dark">İşlem Geçmişi:</div>
                         <div class="col-7">
                             <div style="max-height: 220px; overflow-y: auto;" class="custom-scroll">
@@ -259,6 +267,10 @@
                                     <option value="@item.Value">@item.Text</option>
                             }
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Yanıtınız</label>
+                        <textarea class="form-control" name="response" id="Response" rows="2">@Html.Raw(ViewBag.LastResponse ?? "")</textarea>
                     </div>
 
                     <!-- Yüklü Dosyalar -->

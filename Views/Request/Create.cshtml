@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Create Requester";
+    bool disableUnit = (bool)(ViewBag.DisableUnitSelect ?? false);
+    int gsUnitId     = (int)(ViewBag.GeneralSekreterUnitId ?? 0);
+
 }
 
 <div class="col-md-12 justify-content-center" >
@@ -25,14 +28,24 @@
 
             <form asp-action="Create" enctype="multipart/form-data">
                 <div class="row">
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6 mb-4">                       
                         <label asp-for="Tckn" class="form-label">T.C Kimlik No</label>
-                        <input asp-for="Tckn" class="form-control"
+                        <input id="Tckn" asp-for="Tckn" class="form-control"
                                maxlength="11" minlength="11"
                                pattern="[0-9]{11}"
                                title="11 haneli rakamlardan oluşmalıdır."
                                required />
-                        <span asp-validation-for="Tckn" class="text-danger"></span>
+                        <div id="historyAlert"
+                             class="alert custom-history-alert mt-2 d-none d-flex justify-content-between align-items-center">
+                            <span id="historyText"></span>
+                            <button type="button"
+                                    id="btnHistory"
+                                    class="btn btn-sm btn-outline-dark">
+                                Geçmiş Talepleri Gör
+                            </button>
+                        </div>
+
+
                     </div>
 
                     <div class="col-md-6 mb-4">
@@ -62,11 +75,18 @@
                         <label asp-for="Description" class="form-label">Açıklama</label>
                         <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                     </div>
-
+                     @if (!disableUnit)
+                    {
                     <div class="col-md-4 mb-4">
-                        <label asp-for="RequestUnitId" class="form-label">Talep Edilen Birim</label>
-                        <select asp-for="RequestUnitId" class="form-control" asp-items="ViewBag.RequestUnitList"></select>
-                    </div>
+                    <label asp-for="RequestUnitId" class="form-label">Talep Edilen Birim</label>
+                    <select asp-for="RequestUnitId"
+                            class="form-control"
+                            asp-items="ViewBag.RequestUnitList">
+                    </select>
+                        </div>
+                    }else{
+                      <input type="hidden" asp-for="RequestUnitId" value="@gsUnitId" />     
+                    }
                     <div class="col-md-4 mb-4">
                         <label asp-for="RequestStatusId" class="form-label">Talep Durumu</label>
                         <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList"></select>
@@ -82,6 +102,7 @@
                     </div>
 
                     <div class="col-md-12 d-flex justify-content-end">
+                       
                         <a class="btn btn-outline-secondary me-2" href="@Url.Action("Index")">Listeye Geri Dön</a>
                         <input type="submit" value="Talep Oluştur" class="btn btn-dark" />
                     </div>
@@ -93,3 +114,43 @@
 </div>
 
 
+@section Scripts {
+    <script>
+        (function(){
+          const txtTckn      = document.getElementById('Tckn');
+          const historyAlert = document.getElementById('historyAlert');
+          const historyText  = document.getElementById('historyText');
+          const btnHistory   = document.getElementById('btnHistory');
+
+          txtTckn.addEventListener('blur', function(){
+            const tckn = txtTckn.value.trim();
+            if (!/^\d{11}$/.test(tckn)) {
+              historyAlert.classList.add('d-none');
+              return;
+            }
+
+            fetch(`@Url.Action("CheckHistory", "Request")?tckn=${encodeURIComponent(tckn)}`)
+              .then(r => r.json())
+              .then(json => {
+                if (json.hasHistory) {
+                  // Uyarı metni
+                  historyText.textContent =
+                    `Bu T.C. kimlik no ile daha önce ${json.count} talep oluşturulmuş.`;
+                  // Buton tıklayınca History sayfasına gitsin
+                  btnHistory.onclick = () => {
+                    window.location.href =
+                      `@Url.Action("History", "Request")?tckn=${encodeURIComponent(tckn)}`;
+                  };
+
+                  historyAlert.classList.remove('d-none');
+                } else {
+                  historyAlert.classList.add('d-none');
+                }
+              })
+              .catch(_ => {
+                historyAlert.classList.add('d-none');
+              });
+          });
+        })();
+    </script>
+}

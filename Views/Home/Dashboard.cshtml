@@ -187,17 +187,39 @@
                 labs   = Object.keys(data),
                 vals   = labs.map(l=>data[l]),
                 cols   = labs.map(l=>statusColors[l]||'#0d6efd');
+
             if(chart) chart.destroy();
-            chart = new Chart(ctx,{
-              type:'bar',
-              data:{ labels:labs, datasets:[{ label, data:vals, backgroundColor:cols }]},
-              options:{ responsive:true, scales:{ y:{ beginAtZero:true }}}
+            chart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: labs,
+                datasets: [{
+                  label: label,
+                  data: vals,
+                  backgroundColor: cols
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { display: false },    // ← legend’ı kaldırıyor
+                  tooltip: { enabled: true }
+                },
+                scales: {
+                  y: { beginAtZero: true },
+                  x: {                       // isteğe bağlı: X-eksenini de gizlemek isterseniz
+                    grid: { display: false },
+                    ticks: { display: false },
+                    border: { display: false }
+                  }
+                }
+              }
             });
           }
 
-          document.querySelectorAll(tabsSel+' button').forEach(btn=>{
-            btn.addEventListener('click',()=>{
-              document.querySelectorAll(tabsSel+' button').forEach(x=>x.classList.remove('active'));
+          document.querySelectorAll(tabsSel + ' button').forEach(btn => {
+            btn.addEventListener('click', () => {
+              document.querySelectorAll(tabsSel + ' button').forEach(x=>x.classList.remove('active'));
               btn.classList.add('active');
               update(btn.dataset.range);
             });
@@ -205,14 +227,24 @@
           update('daily');
         }
 
+
         document.addEventListener('DOMContentLoaded', ()=>{
           initSegmentBar();
 
         @if (isAdmin)
         {
             <text>
-                  initColoredBar('@Url.Action("GetUnitDistribution", "Home")', 'unitChart', '#unitTabs', 'Birim Dağılımı');
+                      initColoredBar('@Url.Action("GetUnitDistribution", "Home")', 'unitChart', '#unitTabs', 'Birim Dağılımı');
             </text>
+            <text>
+                      initColoredBar('@Url.Action("GetStatusDistribution", "Home")', 'statusChart', '#statusTabs', 'Durum Dağılımı');
+            </text>
+            <text>
+                      initColoredBar('@Url.Action("GetTypeDistribution", "Home")', 'typeChart', '#typeTabs', 'Tip Dağılımı');
+            </text>
+        }
+        else
+        {
             <text>
                   initColoredBar('@Url.Action("GetStatusDistribution", "Home")', 'statusChart', '#statusTabs', 'Durum Dağılımı');
             </text>
@@ -220,15 +252,7 @@
                   initColoredBar('@Url.Action("GetTypeDistribution", "Home")', 'typeChart', '#typeTabs', 'Tip Dağılımı');
             </text>
         }
-        else
-        {
-            <text>
-              initColoredBar('@Url.Action("GetStatusDistribution", "Home")', 'statusChart', '#statusTabs', 'Durum Dağılımı');
-            </text>
-            <text>
-              initColoredBar('@Url.Action("GetTypeDistribution", "Home")', 'typeChart', '#typeTabs', 'Tip Dağılımı');
-            </text>
-        }
         });
     </script>
 }
+

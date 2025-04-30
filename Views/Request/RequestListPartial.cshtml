@@ -277,75 +277,98 @@ else
         });
     });
 
-
-    // Detayları gösteren modalı aç
-    function showDetails(id) {
+      function showDetails(id) {
         $.ajax({
-            url: '/Request/GetDetails/' + id,
-            type: 'GET',
-            success: function (data) {
-                $('#modalTckn').text(data.tckn);
-                $('#modalName').text(data.firstName + ' ' + data.surname);
-                $('#modalRequestType').text(data.requestType);
-                $('#modalStatus').text(data.requestStatus);
-                $('#modalDate').text(data.date);
-                $('#modalDescription').text(data.description);
+          url: '/Request/GetDetails/' + id,
+          type: 'GET',
+          success: function(data) {
+            // Temel alanlar
+            $('#modalTckn').text(data.tckn);
+            $('#modalName').text(data.firstName + ' ' + data.surname);
+            $('#modalRequestType').text(data.requestType);
+            $('#modalStatus').text(data.requestStatus);
+            $('#modalDate').text(data.date);
+            $('#modalDescription').text(data.description);
 
-                       let logHtml = '';
-    if (data.logs && data.logs.length > 0) {
-        data.logs.forEach(log => {
-            logHtml += `
-                <div class="border rounded p-2 shadow-sm" style="background-color: transparent;">
-                    <div class="fw-semibold text-dark mb-1">
-                        <i class="bi bi-pencil-square me-1 text-primary"></i>${log.actionType}
-                    </div>
-                    <div class="text-muted mb-1" style="font-size: 0.9rem;">${log.description}</div>
-                    <div class="text-end text-secondary small">
-                        <i class="bi bi-person-circle me-1"></i>${log.changedBy} – ${log.date}
-                    </div>
-                </div>`;
-        });
-    } else {
-        logHtml = "<span class='text-muted'>İşlem geçmişi bulunamadı.</span>";
-    }
-    $('#modalLogs').html(logHtml);
+            // Yanıt Geçmişi ve İşlem Geçmişi ayrımı
+            var logsHtml      = '';
+            var responsesHtml = '';
 
-
-
-                let fileHtml = '';
-                if (data.files && data.files.length > 0) {
-                    data.files.forEach(file => {
-                        const fileName = file.split('/').pop();
-                        fileHtml += `
-                            <div class="position-relative" style="width:120px;height:120px;">
-                                <img src="${file}" class="img-thumbnail w-100 h-100" style="border-radius:6px; object-fit:cover;">
-                                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2"
-                                     style="background:rgba(0,0,0,0.6); opacity:0; transition:opacity 0.3s;"
-                                     onmouseover="this.style.opacity=1"
-                                     onmouseout="this.style.opacity=0">
-                                    <a href="${file}" download="${fileName}" class="btn btn-sm btn-light">
-                                        <i class="bi bi-download"></i>
-                                    </a>
-                                    <a href="${file}" target="_blank" class="btn btn-sm btn-light">
-                                        <i class="bi bi-box-arrow-up-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        `;
-                    });
+            if (Array.isArray(data.logs) && data.logs.length) {
+              data.logs.forEach(function(log) {
+                if (log.actionType === 'Yanıt Güncellendi' || log.response) {
+                  responsesHtml +=
+                    '<div class="border rounded p-2 shadow-sm mb-2">' +
+                      '<div class="fw-semibold text-dark mb-1">' +
+                        '<i class="bi bi-chat-dots me-1 text-success"></i>' + log.actionType +
+                      '</div>' +
+                      (log.response
+                        ? '<div class="alert alert-light p-2 mb-1"><strong>Yanıt:</strong> ' + log.response + '</div>'
+                        : ''
+                      ) +
+                      '<div class="text-end text-secondary small">' +
+                        '<i class="bi bi-person-circle me-1"></i>' + log.changedBy + ' – ' + log.date +
+                      '</div>' +
+                    '</div>';
                 } else {
-                    fileHtml = "<span>Dosya bulunamadı.</span>";
+                  logsHtml +=
+                    '<div class="border rounded p-2 shadow-sm mb-2">' +
+                      '<div class="fw-semibold text-dark mb-1">' +
+                        '<i class="bi bi-pencil-square me-1 text-primary"></i>' + log.actionType +
+                      '</div>' +
+                      '<div class="text-muted mb-1" style="font-size:0.9rem;">' + log.description + '</div>' +
+                      '<div class="text-end text-secondary small">' +
+                        '<i class="bi bi-person-circle me-1"></i>' + log.changedBy + ' – ' + log.date +
+                      '</div>' +
+                    '</div>';
                 }
-
-                $('#modalFiles').html(fileHtml);
-                const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
-                modal.show();
-            },
-            error: function () {
-                alert("Detaylar yüklenemedi.");
+              });
+            } else {
+              responsesHtml = '<span class="text-muted">Yanıt bulunamadı.</span>';
+              logsHtml      = '<span class="text-muted">İşlem geçmişi bulunamadı.</span>';
             }
+
+            $('#modalResponses').html(responsesHtml);
+            $('#modalLogs').html(logsHtml);
+
+            // Dosyalar
+            var filesHtml = '';
+            if (Array.isArray(data.files) && data.files.length) {
+              data.files.forEach(function(f) {
+                var name = f.split('/').pop();
+                filesHtml +=
+                  '<div class="position-relative" style="width:120px;height:120px;">' +
+                    '<img src="' + f + '" class="img-thumbnail w-100 h-100" style="object-fit:cover;border-radius:6px;">' +
+                    '<div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2"' +
+                         'style="background:rgba(0,0,0,0.6);opacity:0;transition:opacity .3s;"' +
+                         'onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">' +
+                      '<a href="' + f + '" download="' + name + '" class="btn btn-sm btn-light">' +
+                        '<i class="bi bi-download"></i>' +
+                      '</a>' +
+                      '<a href="' + f + '" target="_blank" class="btn btn-sm btn-light">' +
+                        '<i class="bi bi-box-arrow-up-right"></i>' +
+                      '</a>' +
+                    '</div>' +
+                  '</div>';
+              });
+            } else {
+              filesHtml = '<span>Dosya bulunamadı.</span>';
+            }
+            $('#modalFiles').html(filesHtml);
+
+            // Modal’ı göster
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+          },
+          error: function() {
+            alert("Detaylar yüklenemedi.");
+          }
         });
-    }
+      }
+
+      // Eğer diğer kodlarınız $(document).ready içinde ise, eksiksiz kapattığınızdan emin olun:
+      $(document).ready(function(){
+        // … diğer init kodlarınız …
+      });  // <<< burayı unutmayın
 
     // Güncelleme modalı aç
    function openUpdateModal(id) {
@@ -378,18 +401,16 @@ else
                 alert(data.message);
                 return;
             }
-
-            // dropdownları güncelle
-                // Dropdown değerlerini önce sıfırla
-    $('#RequestTypeId option').prop('selected', false);
-    $('#RequestUnitId option').prop('selected', false);
-    $('#RequestStatusId option').prop('selected', false);
+                $('#RequestTypeId, #RequestStatusId, #RequestUnitId').val('');
+         $('#RequestTypeId').val(data.requestTypeId);
+            $('#RequestStatusId').val(data.requestStatusId);
+            $('#RequestUnitId').val(data.requestUnitId);
 
     // Sonra doğru olanı seç
     $(`#RequestTypeId option[value="${data.requestTypeId}"]`).prop('selected', true);
     $(`#RequestUnitId option[value="${data.requestUnitId}"]`).prop('selected', true);
     $(`#RequestStatusId option[value="${data.requestStatusId}"]`).prop('selected', true);
-
+         $('#Response').val(data.response ?? '');
 
             const updateModal = new bootstrap.Modal(document.getElementById('updateRequestModal'));
             updateModal.show();

@@ -9,5 +9,7 @@ public class RequestLog
   public string ChangedBy { get; set; } // Kullanıcı Adı veya ID
   public DateTime ChangedAt { get; set; }
 
+  public string? Response { get; set; }
+
   public Request Request { get; set; }
 }

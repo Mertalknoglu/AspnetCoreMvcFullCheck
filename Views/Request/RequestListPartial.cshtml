@@ -2,9 +2,10 @@
 
 @{
     string kaynak = ViewData["gelen"]?.ToString()?.ToLower() ?? "";
-    string tableId = kaynak == "true" ? "gelenTablo" : "gonderilenTablo";
+    string tableId = ViewData["tableId"]?.ToString() ?? "requestTable";
     bool isGelen = kaynak == "true";
 }
+
 
 @if (Model != null && Model.Any())
 {
@@ -68,7 +69,7 @@
 
                                         @if (item.RequestStatus?.Status == "Tamamlandı")
                                         {
-                                            <span class="badge bg-success px-3 py-2" style="background-color:#dc3545; color:white;">KAPANDI</span>
+                                            <span class="badge bg-danger px-3 py-2" style="background-color:#dc3545; color:white;">KAPANDI</span>
                                         }
                                     }
                                   
@@ -222,7 +223,7 @@ else
 
 <script>
     $(document).ready(function () {
-        ['#gelenTablo', '#gonderilenTablo'].forEach(function (selector) {
+                ['#requestTable', '#gonderilenTablo','#tamamlananTablo'].forEach(function (selector) {
             const tablo = $(selector);
             if (tablo.length && !$.fn.DataTable.isDataTable(tablo)) {
                 tablo.DataTable({
@@ -294,39 +295,36 @@ else
             var logsHtml      = '';
             var responsesHtml = '';
 
-            if (Array.isArray(data.logs) && data.logs.length) {
-              data.logs.forEach(function(log) {
-                if (log.actionType === 'Yanıt Güncellendi' || log.response) {
-                  responsesHtml +=
-                    '<div class="border rounded p-2 shadow-sm mb-2">' +
-                      '<div class="fw-semibold text-dark mb-1">' +
-                        '<i class="bi bi-chat-dots me-1 text-success"></i>' + log.actionType +
-                      '</div>' +
-                      (log.response
-                        ? '<div class="alert alert-light p-2 mb-1"><strong>Yanıt:</strong> ' + log.response + '</div>'
-                        : ''
-                      ) +
-                      '<div class="text-end text-secondary small">' +
-                        '<i class="bi bi-person-circle me-1"></i>' + log.changedBy + ' – ' + log.date +
-                      '</div>' +
-                    '</div>';
-                } else {
-                  logsHtml +=
-                    '<div class="border rounded p-2 shadow-sm mb-2">' +
-                      '<div class="fw-semibold text-dark mb-1">' +
-                        '<i class="bi bi-pencil-square me-1 text-primary"></i>' + log.actionType +
-                      '</div>' +
-                      '<div class="text-muted mb-1" style="font-size:0.9rem;">' + log.description + '</div>' +
-                      '<div class="text-end text-secondary small">' +
-                        '<i class="bi bi-person-circle me-1"></i>' + log.changedBy + ' – ' + log.date +
-                      '</div>' +
-                    '</div>';
-                }
-              });
-            } else {
-              responsesHtml = '<span class="text-muted">Yanıt bulunamadı.</span>';
-              logsHtml      = '<span class="text-muted">İşlem geçmişi bulunamadı.</span>';
-            }
+                if (Array.isArray(data.logs) && data.logs.length) {
+      data.logs.forEach(function (log) {
+        if (log.actionType === "Yanıt Güncellendi") {
+          responsesHtml +=
+            '<div class="border rounded p-2 shadow-sm mb-2">' +
+              '<div class="fw-semibold text-dark mb-1">' +
+                '<i class="bi bi-chat-dots me-1 text-success"></i>Yanıt Güncellendi' +
+              '</div>' +
+              '<div class="alert alert-light p-2 mb-1"><strong>Yanıt:</strong> ' + (log.response ?? '—') + '</div>' +
+              '<div class="text-end text-secondary small">' +
+                '<i class="bi bi-person-circle me-1"></i>' + log.changedBy + ' – ' + log.date +
+              '</div>' +
+            '</div>';
+        } else {
+          logsHtml +=
+            '<div class="border rounded p-2 shadow-sm mb-2">' +
+              '<div class="fw-semibold text-dark mb-1">' +
+                '<i class="bi bi-pencil-square me-1 text-primary"></i>' + log.actionType +
+              '</div>' +
+              '<div class="text-muted mb-1" style="font-size:0.9rem;">' + log.description + '</div>' +
+              '<div class="text-end text-secondary small">' +
+                '<i class="bi bi-person-circle me-1"></i>' + log.changedBy + ' – ' + log.date +
+              '</div>' +
+            '</div>';
+        }
+      });
+    } else {
+      responsesHtml = '<span class="text-muted">Yanıt bulunamadı.</span>';
+      logsHtml = '<span class="text-muted">İşlem geçmişi bulunamadı.</span>';
+    }
 
             $('#modalResponses').html(responsesHtml);
             $('#modalLogs').html(logsHtml);

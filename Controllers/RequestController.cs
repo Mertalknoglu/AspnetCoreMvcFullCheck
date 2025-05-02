@@ -55,9 +55,14 @@ public class RequestController : Controller
         .Include(r => r.RequestUnit)
         .ToListAsync();
 
+    ViewBag.TamamlananTalepler = await _context.Requests
+    .Where(r => !r.IsDeleted && r.UserId == user.Id && r.RequestStatus.Status == "Tamamlandı")
+    .Include(r => r.RequestStatus)
+    .Include(r => r.RequestType)
+    .Include(r => r.RequestUnit)
+    .ToListAsync();
     ViewBag.RequestStatusList = _context.RequestStatuses
         .Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Status }).ToList();
-
     ViewBag.RequestTypeList = _context.RequestTypes
         .Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Type }).ToList();
 
@@ -105,12 +110,13 @@ public class RequestController : Controller
 
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task<IActionResult> Create([Bind("Tckn,FirstName,Surname,TelNo,Email,Address,Description,RequestUnitId,RequestStatusId,RequestTypeId")] Request requester, IFormFile[] files)
+  public async Task<IActionResult> Create([Bind("Tckn,FirstName,Surname,TelNo,Email,Address,Description,RequestUnitId,RequestStatusId,RequestTypeId,Response")] Request requester, IFormFile[] files)
   {
     // Giriş yapan kullanıcının Id'sini alıyoruz
     var user = await _userManager.GetUserAsync(User);
     var userID = user.Id;
 
+    var fullName = $"{user.FirstName} {user.LastName}";
     var errors = ValidateRequester(requester);
 
     if (errors.Any())
@@ -157,8 +163,25 @@ public class RequestController : Controller
     }
 
     _context.Add(requester);
+
+    await _context.SaveChangesAsync();
+
+    var actor = $"{user.FirstName} {user.LastName}";
+    var statusName = _context.RequestStatuses.FirstOrDefault(s => s.Id == requester.RequestStatusId)?.Status;
+    var typeName = _context.RequestTypes.FirstOrDefault(t => t.Id == requester.RequestTypeId)?.Type;
+    var unitName = _context.RequestUnits.FirstOrDefault(u => u.Id == requester.RequestUnitId)?.Unit;
+
+    await LogIfChanged<string>(
+        requester.Id,
+        actionType: "Talep Oluşturuldu",
+        oldValue: string.Empty,
+        newValue: $"Durum: {statusName}, Tip: {typeName}, Birim: {unitName}",  // herhangi bir dummy değer, sadece eşit olmaması yeterli
+        changedBy: fullName,
+        response: requester.Response
+    );
     await _context.SaveChangesAsync();
     TempData["SuccessMessage"] = "Kayıt başarıyla oluşturuldu!";
+
     return RedirectToAction(nameof(Index));
   }
 
@@ -492,6 +515,8 @@ public class RequestController : Controller
 
     ViewBag.GelenTalepler = filtered.Where(r => r.RequestUnitId == user.UnitId || user.IsAdmin).ToList();
     ViewBag.GonderdigimTalepler = filtered.Where(r => r.UserId == user.Id).ToList();
+    ViewBag.TamamlananTalepler = filtered.Where(r => r.UserId == user.Id && r.RequestStatus.Status == "Tamamlandı")
+    .ToList();
 
     ViewBag.RequestStatusList = _context.RequestStatuses.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Status }).ToList();
     ViewBag.RequestTypeList = _context.RequestTypes.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Type }).ToList();

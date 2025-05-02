@@ -11,10 +11,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Identity yapılandırması
 builder.Services.ConfigureApplicationCookie(options =>
 {
-  // Çerez süresi ayarları
   options.Cookie.HttpOnly = true;
-  options.ExpireTimeSpan = TimeSpan.FromDays(30);  // Çerez süresi (30 gün)
-  options.SlidingExpiration = true;  // Eğer kullanıcı tekrar giriş yaparsa sürenin sıfırlanmasını sağlar
+  options.Cookie.Name = "TacKimlikAuth";        // isterseniz özel isim
+  options.ExpireTimeSpan = TimeSpan.FromDays(7); // 7 gün boyunca hatırla
+  options.SlidingExpiration = true;             // her istekte yenilenir
+  options.LoginPath = "/Account/Login";
+  options.AccessDeniedPath = "/Error/403";
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -22,12 +24,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-// Yetkilendirme ve kimlik doğrulama ayarları
-builder.Services.ConfigureApplicationCookie(options =>
-{
-  options.LoginPath = "/Account/Login"; // Kullanıcı giriş yapmadığında yönlendirilecek sayfa
-  options.AccessDeniedPath = "/Error/500"; // Yetkisiz erişim yönlendirme
-});
 builder.Services.AddSession();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -46,14 +42,13 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
   endpoints.MapControllerRoute(
       name: "default",
-      pattern: "{controller=Account}/{action=Login}/{id?}");
+      pattern: "{controller=Home}/{action=Dashboard}/{id?}");
 });
 
 app.UseExceptionHandler("/Error/500"); // özel hata sayfasına yönlendirme
